@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin:'application'
+
+mainClassName = "de.costache.calendar.demo.JCalendarFrameDemo"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files('libs/JavaCalendar-1.0-SNAPSHOT.jar')
+    runtime 'commons-collections:commons-collections:3.1'
+ }
