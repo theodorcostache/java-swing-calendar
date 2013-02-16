@@ -25,25 +25,25 @@ import de.costache.calendar.JCalendar;
  * @author theodorcostache
  * 
  */
-public class EntryCollectionRepository {
+public class EventCollectionRepository {
 
-	private final Map<JCalendar, IndexedEntryCollection> repository;
+	private final Map<JCalendar, IndexedEventCollection> repository;
 
-	private static final EntryCollectionRepository instance = new EntryCollectionRepository();
+	private static final EventCollectionRepository instance = new EventCollectionRepository();
 
-	private EntryCollectionRepository() {
-		repository = new HashMap<JCalendar, IndexedEntryCollection>();
+	private EventCollectionRepository() {
+		repository = new HashMap<JCalendar, IndexedEventCollection>();
 	}
 
 	public static void register(final JCalendar calendar) {
-		instance.repository.put(calendar, new IndexedEntryCollection(calendar));
+		instance.repository.put(calendar, new IndexedEventCollection(calendar));
 	}
 
-	public static EntryCollection get(final JCalendar calendar) {
-		IndexedEntryCollection entryCollection = instance.repository.get(calendar);
-		if (entryCollection == null)
+	public static EventCollection get(final JCalendar calendar) {
+		IndexedEventCollection eventCollection = instance.repository.get(calendar);
+		if (eventCollection == null)
 			throw new IllegalArgumentException(
 					"Calendar not registered. Please register calendar before calling this method");
-		return entryCollection;
+		return eventCollection;
 	}
 }

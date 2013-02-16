@@ -16,34 +16,34 @@
 package de.costache.calendar.events;
 
 import de.costache.calendar.JCalendar;
-import de.costache.calendar.model.JCalendarEntry;
+import de.costache.calendar.model.CalendarEvent;
 
 /**
  * 
  * @author theodorcostache
  * 
  */
-public class CollectionChangedEvent {
+public class ModelChangedEvent {
 
 	private JCalendar source;
-	private JCalendarEntry value;
+	private CalendarEvent calendarEvent;
 
 	/**
-	 * Creates a new instance of {@link CollectionChangedEvent}
+	 * Creates a new instance of {@link ModelChangedEvent}
 	 */
-	public CollectionChangedEvent() {
+	public ModelChangedEvent() {
 	}
 
 	/**
-	 * Creates a new instance of {@link CollectionChangedEvent}
+	 * Creates a new instance of {@link ModelChangedEvent}
 	 * 
 	 * @param source
-	 * @param value
+	 * @param calendarEvent
 	 */
-	public CollectionChangedEvent(JCalendar source, JCalendarEntry value) {
+	public ModelChangedEvent(JCalendar source, CalendarEvent calendarEvent) {
 		super();
 		this.source = source;
-		this.value = value;
+		this.calendarEvent = calendarEvent;
 	}
 
 	/**
@@ -65,20 +65,18 @@ public class CollectionChangedEvent {
 	}
 
 	/**
-	 * gets the value
 	 * 
 	 * @return
 	 */
-	public JCalendarEntry getValue() {
-		return value;
+	public CalendarEvent getCalendarEvent() {
+		return calendarEvent;
 	}
 
 	/**
-	 * sets the value
 	 * 
-	 * @param value
+	 * @param calendarEvent
 	 */
-	public void setValue(JCalendarEntry value) {
-		this.value = value;
+	public void setCalendarEvent(CalendarEvent calendarEvent) {
+		this.calendarEvent = calendarEvent;
 	}
 }

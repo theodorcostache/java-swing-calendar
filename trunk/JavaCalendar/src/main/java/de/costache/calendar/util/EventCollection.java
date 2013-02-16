@@ -18,34 +18,34 @@ package de.costache.calendar.util;
 import java.util.Collection;
 import java.util.Date;
 
-import de.costache.calendar.events.CollectionChangedListener;
+import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.SelectionChangedListener;
-import de.costache.calendar.model.JCalendarEntry;
+import de.costache.calendar.model.CalendarEvent;
 
 /**
  * 
  * @author theodorcostache
  * 
  */
-public interface EntryCollection {
+public interface EventCollection {
 
-	void add(JCalendarEntry entry);
+	void add(CalendarEvent event);
 
-	void remove(JCalendarEntry entry);
+	void remove(CalendarEvent event);
 
-	void addSelected(JCalendarEntry entry);
+	void addSelected(CalendarEvent event);
 
-	void removeSelected(JCalendarEntry entry);
+	void removeSelected(CalendarEvent event);
 
-	void clearSelected(JCalendarEntry entry, boolean b);
+	void clearSelected(CalendarEvent event, boolean b);
 
-	Collection<JCalendarEntry> getSelectedEntries();
+	Collection<CalendarEvent> getSelectedEvents();
 
-	Collection<JCalendarEntry> getCalendarEntries(Date date);
+	Collection<CalendarEvent> getEvents(Date date);
 
-	void addCollectionChangedListener(CollectionChangedListener listener);
+	void addCollectionChangedListener(ModelChangedListener listener);
 
-	void removeCollectionChangedListener(CollectionChangedListener listener);
+	void removeCollectionChangedListener(ModelChangedListener listener);
 
 	void addSelectionChangedListener(SelectionChangedListener selectionChangedListener);
 

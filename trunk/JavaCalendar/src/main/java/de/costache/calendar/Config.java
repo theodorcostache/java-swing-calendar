@@ -36,9 +36,9 @@ public class Config {
 
 	private Color todayHeaderBackgroundColor;
 
-	private Color entryDefaultBackgroundColor;
+	private Color eventDefaultBackgroundColor;
 
-	private Color entryDefaultForegroundColor;
+	private Color eventDefaultForegroundColor;
 
 	private int workingHoursStart;
 
@@ -58,8 +58,8 @@ public class Config {
 		todayHeaderForegroundColor = Color.black;
 		dayHeaderForegroundColor = Color.black;
 
-		entryDefaultBackgroundColor = new Color(135, 184, 217, 128);
-		entryDefaultForegroundColor = Color.DARK_GRAY;
+		eventDefaultBackgroundColor = new Color(135, 184, 217, 128);
+		eventDefaultForegroundColor = Color.DARK_GRAY;
 
 		workingHoursStart = 8;
 		workingHoursEnd = 17;
@@ -116,20 +116,20 @@ public class Config {
 		this.todayHeaderForegroundColor = todayHeaderForegroundColor;
 	}
 
-	public Color getEntryDefaultBackgroundColor() {
-		return entryDefaultBackgroundColor;
+	public Color getEventDefaultBackgroundColor() {
+		return eventDefaultBackgroundColor;
 	}
 
-	public void setEntryDefaultBackgroundColor(Color entryDefaultBackgroundColor) {
-		this.entryDefaultBackgroundColor = entryDefaultBackgroundColor;
+	public void setEventDefaultBackgroundColor(Color eventDefaultBackgroundColor) {
+		this.eventDefaultBackgroundColor = eventDefaultBackgroundColor;
 	}
 
-	public Color getEntryDefaultForegroundColor() {
-		return entryDefaultForegroundColor;
+	public Color getEventDefaultForegroundColor() {
+		return eventDefaultForegroundColor;
 	}
 
-	public void setEntryDefaultForegroundColor(Color entryDefaultForegroundColor) {
-		this.entryDefaultForegroundColor = entryDefaultForegroundColor;
+	public void setEventDefaultForegroundColor(Color eventDefaultForegroundColor) {
+		this.eventDefaultForegroundColor = eventDefaultForegroundColor;
 	}
 
 	public int getWorkingHoursEnd() {

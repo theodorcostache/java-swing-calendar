@@ -32,9 +32,9 @@ import javax.swing.JPanel;
 
 import de.costache.calendar.Config;
 import de.costache.calendar.JCalendar;
-import de.costache.calendar.model.JCalendarEntry;
-import de.costache.calendar.util.EntryCollection;
-import de.costache.calendar.util.EntryCollectionRepository;
+import de.costache.calendar.model.CalendarEvent;
+import de.costache.calendar.util.EventCollection;
+import de.costache.calendar.util.EventCollectionRepository;
 import de.costache.calendar.util.GraphicsUtil;
 
 /**
@@ -62,21 +62,21 @@ public class DayCompleteContentPanel extends JPanel {
 			public void mouseClicked(final MouseEvent e) {
 				super.mouseClicked(e);
 				final JCalendar calendar = DayCompleteContentPanel.this.owner.getOwner();
-				final JCalendarEntry entry = getEntry(e.getX(), e.getY());
+				final CalendarEvent event = getEvent(e.getX(), e.getY());
 
 				if (e.getClickCount() == 1) {
 
-					final EntryCollection entries = EntryCollectionRepository.get(calendar);
+					final EventCollection events = EventCollectionRepository.get(calendar);
 
 					if (!e.isControlDown()) {
-						entries.clearSelected(entry, true);
+						events.clearSelected(event, true);
 					}
-					if (entry != null) {
-						entry.setSelected(!entry.isSelected());
-						if (entry.isSelected()) {
-							entries.addSelected(entry);
+					if (event != null) {
+						event.setSelected(!event.isSelected());
+						if (event.isSelected()) {
+							events.addSelected(event);
 						} else {
-							entries.removeSelected(entry);
+							events.removeSelected(event);
 						}
 					}
 
@@ -126,9 +126,9 @@ public class DayCompleteContentPanel extends JPanel {
 			public void mouseMoved(MouseEvent e) {
 				super.mouseMoved(e);
 				final JCalendar calendar = DayCompleteContentPanel.this.owner.getOwner();
-				final JCalendarEntry entry = getEntry(e.getX(), e.getY());
-				if (entry != null) {
-					setToolTipText(calendar.getFormater().format(entry));
+				final CalendarEvent event = getEvent(e.getX(), e.getY());
+				if (event != null) {
+					setToolTipText(calendar.getTooltipFormater().format(event));
 				} else {
 					setToolTipText(null);
 				}
@@ -144,29 +144,29 @@ public class DayCompleteContentPanel extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		drawFullDayEntries((Graphics2D) g);
+		drawFullDayEvents((Graphics2D) g);
 	}
 
-	private void drawFullDayEntries(final Graphics2D graphics2d) {
+	private void drawFullDayEvents(final Graphics2D graphics2d) {
 
-		final EntryCollection entryCollection = EntryCollectionRepository.get(owner.getOwner());
-		final Collection<JCalendarEntry> entries = entryCollection.getCalendarEntries(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
 		int pos = 2;
-		if (entries.size() > 0) {
+		if (events.size() > 0) {
 
 			final Config config = owner.getOwner().getConfig();
 
-			for (final JCalendarEntry entry : entries) {
-				if (!entry.isAllDay())
+			for (final CalendarEvent event : events) {
+				if (!event.isAllDay())
 					continue;
-				Color bgColor = entry.getType().getBackgroundColor();
-				bgColor = bgColor == null ? config.getEntryDefaultBackgroundColor() : bgColor;
-				Color fgColor = entry.getType().getForegroundColor();
-				fgColor = fgColor == null ? config.getEntryDefaultForegroundColor() : fgColor;
-				graphics2d.setColor(!entry.isSelected() ? bgColor : bgColor.darker().darker());
+				Color bgColor = event.getType().getBackgroundColor();
+				bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
+				Color fgColor = event.getType().getForegroundColor();
+				fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
+				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
 				graphics2d.fillRect(2, pos, getWidth() - 4, 15);
 
-				final String entryString = entry.getSummary();
+				final String eventString = event.getSummary();
 				int fontSize = Math.round(getHeight() * 0.5f);
 				fontSize = fontSize > 9 ? 9 : fontSize;
 
@@ -174,8 +174,8 @@ public class DayCompleteContentPanel extends JPanel {
 				final FontMetrics metrics = graphics2d.getFontMetrics(font);
 				graphics2d.setFont(font);
 
-				graphics2d.setColor(!entry.isSelected() ? fgColor : Color.white);
-				GraphicsUtil.drawTrimmedString(graphics2d, entryString, 6,
+				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
+				GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6,
 						pos + (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
 
 				pos += 17;
@@ -185,15 +185,15 @@ public class DayCompleteContentPanel extends JPanel {
 		}
 	}
 
-	private JCalendarEntry getEntry(final int x, final int y) {
+	private CalendarEvent getEvent(final int x, final int y) {
 
-		final EntryCollection entryCollection = EntryCollectionRepository.get(owner.getOwner());
-		final Collection<JCalendarEntry> entries = entryCollection.getCalendarEntries(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
 
 		int pos = 2;
-		if (entries.size() > 0) {
-			for (final JCalendarEntry entry : entries) {
-				if (!entry.isAllDay())
+		if (events.size() > 0) {
+			for (final CalendarEvent event : events) {
+				if (!event.isAllDay())
 					continue;
 				final int rectXStart = 2;
 				final int rectYStart = pos;
@@ -204,7 +204,7 @@ public class DayCompleteContentPanel extends JPanel {
 
 				final Rectangle r = new Rectangle(rectXStart, rectYStart, rectWidth, rectHeight);
 				if (r.contains(x, y)) {
-					return entry;
+					return event;
 				}
 
 				pos += 17;

@@ -13,11 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License. 
  */
-package de.costache.calendar.format;
+package de.costache.calendar.events;
 
-import de.costache.calendar.model.JCalendarEntry;
+import java.util.EventListener;
 
-public interface JCalendarEntryFormat {
+/**
+ * 
+ * @author theodorcostache
+ * 
+ */
+public interface ModelChangedListener extends EventListener {
 
-	public String format(JCalendarEntry calendarEntry);
+	public void eventAdded(ModelChangedEvent event);
+
+	public void eventRemoved(ModelChangedEvent event);
+
+	public void eventChanged(ModelChangedEvent event);
 }
