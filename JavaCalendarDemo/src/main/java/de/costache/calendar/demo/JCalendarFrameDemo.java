@@ -52,120 +52,90 @@ public class JCalendarFrameDemo extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final JMenuBar menuBar;
-	private final JMenu fileMenu;
-	private final JMenuItem exitMenuItem;
-	private final JCalendar jCalendar;
-	private final JSplitPane content;
-	private final JToolBar toolBar;
 
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy HH:mm:ss:SSS");
+	private final Random r = new Random();
 
-	private final JTextArea description;
-
-	private final JPopupMenu popup;
+	private JMenuBar menuBar;
+	private JMenu fileMenu;
+	private JMenuItem exitMenuItem;
+	private JCalendar jCalendar;
+	private JSplitPane content;
+	private JToolBar toolBar;
+	private JTextArea description;
+	private JPopupMenu popup;
+	private JMenuItem removeMenuItem;
 
 	private final String[] names = new String[] { "Meeting with John", "Shopping", "Business meeting",
 			"Telephone conference" };
 
+	private JButton removeButton;
+
+	private JButton addButton;
+
 	public JCalendarFrameDemo() {
 
-		final Random r = new Random();
+		initGui();
+		initData();
+		bindListeners();
+
+	}
+
+	private void initGui() {
 
 		menuBar = new JMenuBar();
+
 		fileMenu = new JMenu("File");
 		exitMenuItem = new JMenuItem("Exit");
-		exitMenuItem.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
 		fileMenu.add(exitMenuItem);
 		menuBar.add(fileMenu);
-
 		setJMenuBar(menuBar);
 
 		toolBar = new JToolBar("Controls");
-		final JButton add = new JButton("Add");
-		final JButton remove = new JButton("Remove");
+		addButton = new JButton("Add");
+		removeButton = new JButton("Remove");
 
 		Image addImg = null;
 		Image removeImg = null;
 		try {
 			addImg = ImageIO.read(getClass().getResource("resources/add-icon.png"));
 			removeImg = ImageIO.read(getClass().getResource("resources/remove-icon.png"));
-			add.setIcon(new ImageIcon(addImg));
-			remove.setIcon(new ImageIcon(removeImg));
+			addButton.setIcon(new ImageIcon(addImg));
+			removeButton.setIcon(new ImageIcon(removeImg));
 		} catch (final Exception e) {
 
 		}
+		toolBar.add(addButton);
+		toolBar.add(removeButton);
 
-		add.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-
-				final int hour = r.nextInt(19);
-				final int min = r.nextInt(59);
-				final int day = r.nextInt(28);
-				final int month = r.nextInt(11);
-				final int year = 2010 + r.nextInt(8);
-				final Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
-				final Date end = CalendarUtil.createDate(year, month, day, hour + 1 + r.nextInt(4), r.nextInt(59), 0, 0);
-				final CalendarEvent calendarEvent = new CalendarEvent("Added ", start, end);
-
-				jCalendar.addCalendarEvent(calendarEvent);
-				jCalendar.setDisplayStrategy(Type.DAY, start);
-			}
-		});
-
-		remove.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
-				for (final CalendarEvent event : selected) {
-					jCalendar.removeCalendarEvent(event);
-				}
-			}
-		});
+		removeMenuItem.setIcon(new ImageIcon(removeImg));
+		removeMenuItem = new JMenuItem("Remove");
 
 		popup = new JPopupMenu();
-		final JMenuItem removeMi = new JMenuItem("Remove");
-		removeMi.setIcon(new ImageIcon(removeImg));
-		removeMi.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
-				for (final CalendarEvent event : selected) {
-					jCalendar.removeCalendarEvent(event);
-				}
-			}
-		});
-
-		popup.add(removeMi);
+		popup.add(removeMenuItem);
 		popup.add(new JSeparator());
-		toolBar.add(add);
-		toolBar.add(remove);
 
 		description = new JTextArea();
 		description.setLineWrap(true);
 		description.setRows(10);
-		content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		jCalendar = new JCalendar();
 		jCalendar.setPreferredSize(new Dimension(1024, 768));
+		jCalendar.setJPopupMenu(popup);
 
-		this.getContentPane().setLayout(new BorderLayout(10, 10));
-
+		content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		content.add(jCalendar);
 		content.add(new JScrollPane(description));
+
+		this.getContentPane().setLayout(new BorderLayout(10, 10));
 		this.getContentPane().add(toolBar, BorderLayout.PAGE_START);
 		this.getContentPane().add(content, BorderLayout.CENTER);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
+
+	}
+
+	private void initData() {
 
 		final EventType type1 = new EventType();
 
@@ -204,7 +174,57 @@ public class JCalendarFrameDemo extends JFrame {
 		end = CalendarUtil.createDate(2013, 1, 31, 15, 35, 0, 0);
 		calendarEvent = new CalendarEvent("Overlapping 2", start, end);
 		jCalendar.addCalendarEvent(calendarEvent);
-		jCalendar.setJPopupMenu(popup);
+	}
+
+	private void bindListeners() {
+		exitMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+
+		addButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+
+				final int hour = r.nextInt(19);
+				final int min = r.nextInt(59);
+				final int day = r.nextInt(28);
+				final int month = r.nextInt(11);
+				final int year = 2010 + r.nextInt(8);
+				final Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
+				final Date end = CalendarUtil.createDate(year, month, day, hour + 1 + r.nextInt(4), r.nextInt(59), 0, 0);
+				final CalendarEvent calendarEvent = new CalendarEvent("Added ", start, end);
+
+				jCalendar.addCalendarEvent(calendarEvent);
+				jCalendar.setDisplayStrategy(Type.DAY, start);
+			}
+		});
+
+		removeButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+				for (final CalendarEvent event : selected) {
+					jCalendar.removeCalendarEvent(event);
+				}
+			}
+		});
+
+		removeMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+				for (final CalendarEvent event : selected) {
+					jCalendar.removeCalendarEvent(event);
+				}
+			}
+		});
 
 		jCalendar.addCollectionChangedListener(new ModelChangedListener() {
 
@@ -262,7 +282,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				removeMi.setEnabled(jCalendar.getSelectedEvents().size() > 0);
+				removeMenuItem.setEnabled(jCalendar.getSelectedEvents().size() > 0);
 			}
 
 			@Override
