@@ -159,12 +159,13 @@ public class JCalendar extends JPanel {
 		});
 	}
 
+	/**
+	 * Returns the selected day in the calendar
+	 * 
+	 * @return
+	 */
 	public Date getSelectedDay() {
 		return selectedDay.getTime();
-	}
-
-	public void setSelectedDay(Date selectedDay) {
-		this.selectedDay = CalendarUtil.getCalendar(selectedDay, true);
 	}
 
 	/**
@@ -190,7 +191,7 @@ public class JCalendar extends JPanel {
 		final DisplayStrategy strategy = DisplayStrategyFactory.getStrategy(contentPane, strategyType);
 		contentPane.setStrategy(strategy);
 		if (displayDate != null) {
-			setDisplayDate(displayDate);
+			setSelectedDay(displayDate);
 		}
 	}
 
@@ -277,7 +278,8 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param date
 	 */
-	public void setDisplayDate(Date date) {
+	public void setSelectedDay(Date date) {
+		selectedDay = CalendarUtil.getCalendar(date, true);
 		DisplayStrategy strategy = contentPane.getStrategy();
 		strategy.setIntervalStart(date);
 		headerPane.getIntervalLabel().setText(strategy.getDisplayInterval());
@@ -307,18 +309,34 @@ public class JCalendar extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public JPopupMenu getPopupMenu() {
 		return popupMenu;
 	}
 
+	/**
+	 * 
+	 * @param popupMenu
+	 */
 	public void setJPopupMenu(JPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public CalendarEventFormat getTooltipFormater() {
 		return formater;
 	}
 
+	/**
+	 * 
+	 * @param formater
+	 */
 	public void setTooltipFormater(CalendarEventFormat formater) {
 		this.formater = formater;
 	}
