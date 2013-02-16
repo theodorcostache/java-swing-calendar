@@ -109,8 +109,8 @@ public class JCalendarFrameDemo extends JFrame {
 		toolBar.add(addButton);
 		toolBar.add(removeButton);
 
-		removeMenuItem.setIcon(new ImageIcon(removeImg));
 		removeMenuItem = new JMenuItem("Remove");
+		removeMenuItem.setIcon(new ImageIcon(removeImg));
 
 		popup = new JPopupMenu();
 		popup.add(removeMenuItem);
