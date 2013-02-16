@@ -11,3 +11,20 @@ dependencies {
  
     compile 'commons-collections:commons-collections:3.1'
  }
+
+//custom tasks for creating source jar 
+task sourcesJar(type: Jar, dependsOn:classes) {     
+	classifier = 'sources'     
+	from sourceSets.main.allSource 
+}
+// custom tasks for creating javadoc jar   
+task javadocJar(type: Jar, dependsOn:javadoc) {      
+	classifier = 'javadoc'     
+	from javadoc.destinationDir 
+}   
+
+// add the jars as artifacts
+artifacts {      
+	archives sourcesJar      
+	archives javadocJar
+}
