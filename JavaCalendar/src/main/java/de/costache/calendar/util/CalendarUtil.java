@@ -35,56 +35,14 @@ import de.costache.calendar.model.JCalendarEntry;
  */
 public class CalendarUtil {
 
-	/**
-	 * 
-	 * @param c1
-	 * @param c2
-	 * @return
-	 */
+	public static boolean isSameDay(final Date date1, final Date date2) {
+		return stripTime(date1).equals(stripTime(date2));
+	}
+
 	public static boolean isSameMonth(final Calendar c1, final Calendar c2) {
 		return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH);
 	}
 
-	/**
-	 * 
-	 * @param calendar
-	 * @return
-	 */
-	public static Calendar copyCalendar(final Calendar calendar, final boolean stripTime) {
-		final Calendar c = Calendar.getInstance();
-		c.setTime(calendar.getTime());
-		if (stripTime) {
-			c.set(Calendar.HOUR_OF_DAY, 0);
-			c.set(Calendar.MINUTE, 0);
-			c.set(Calendar.SECOND, 0);
-			c.set(Calendar.MILLISECOND, 0);
-		}
-		return c;
-	}
-
-	/**
-	 * 
-	 * @param date
-	 * @param stripTime
-	 * @return
-	 */
-	public static Calendar getCalendar(final Date date, final boolean stripTime) {
-		final Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		if (stripTime) {
-			c.set(Calendar.HOUR_OF_DAY, 0);
-			c.set(Calendar.MINUTE, 0);
-			c.set(Calendar.SECOND, 0);
-			c.set(Calendar.MILLISECOND, 0);
-		}
-		return c;
-	}
-
-	/**
-	 * 
-	 * @param date
-	 * @return
-	 */
 	public static boolean isToday(final Date date) {
 		final Calendar now = Calendar.getInstance();
 		final Calendar calendar = Calendar.getInstance();
@@ -103,34 +61,30 @@ public class CalendarUtil {
 		return calendar.getTime().equals(now.getTime());
 	}
 
-	/**
-	 * 
-	 * @param date1
-	 * @param date2
-	 * @return
-	 */
-	public static boolean isSameDay(final Date date1, final Date date2) {
-		return stripTime(date1).equals(stripTime(date2));
+	public static Calendar copyCalendar(final Calendar calendar, final boolean stripTime) {
+		final Calendar c = Calendar.getInstance();
+		c.setTime(calendar.getTime());
+		if (stripTime) {
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+		}
+		return c;
 	}
 
-	/**
-	 * 
-	 * @param year
-	 *            - the year
-	 * @param month
-	 *            - the month (e.g. 1 for January, 12 for December)
-	 * @param day
-	 *            - the day (e.g. 1 -> 31)
-	 * @param hour
-	 *            - the hour (e.g. 0 -> 23)
-	 * @param minutes
-	 *            - the minutes (e.g. 0 -> 59)
-	 * @param seconds
-	 *            - the seconds (e.g. 0 -> 59)
-	 * @param miliseconds
-	 *            - the miliseconds
-	 * @return
-	 */
+	public static Calendar getCalendar(final Date date, final boolean stripTime) {
+		final Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		if (stripTime) {
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+		}
+		return c;
+	}
+
 	public static final Date createDate(final int year, final int month, final int day, final int hour,
 			final int minutes, final int seconds, final int miliseconds) {
 		final Calendar calendar = Calendar.getInstance();
@@ -144,13 +98,6 @@ public class CalendarUtil {
 		return calendar.getTime();
 	}
 
-	/**
-	 * Removes the time information from the date and returns a date with the
-	 * same date information but hour,minute,second,milisecond set to zero
-	 * 
-	 * @param date
-	 * @return
-	 */
 	public static final Date stripTime(final Date date) {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -161,13 +108,6 @@ public class CalendarUtil {
 		return calendar.getTime();
 	}
 
-	/**
-	 * @param from
-	 *            from his date on
-	 * @param amount
-	 *            number of days in future
-	 * @return
-	 */
 	public static final Date createInDays(final Date from, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(from);
@@ -175,11 +115,6 @@ public class CalendarUtil {
 		return cal.getTime();
 	}
 
-	/**
-	 * @param amount
-	 *            number of weeks in future
-	 * @return
-	 */
 	public static final Date createInWeeks(final Date date, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -187,11 +122,6 @@ public class CalendarUtil {
 		return cal.getTime();
 	}
 
-	/**
-	 * @param amount
-	 *            number of months in future
-	 * @return
-	 */
 	public static final Date createInMonths(final Date date, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -199,12 +129,6 @@ public class CalendarUtil {
 		return cal.getTime();
 	}
 
-	/**
-	 * 
-	 * @param start
-	 * @param end
-	 * @return
-	 */
 	public static Collection<Date> getDates(final Date start, final Date end) {
 
 		final Set<Date> result = new HashSet<Date>();
@@ -218,11 +142,6 @@ public class CalendarUtil {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param date
-	 * @return
-	 */
 	public static long getTotalSeconds(final Date date) {
 		Calendar c = CalendarUtil.getCalendar(date, false);
 		long seconds = c.get(Calendar.HOUR_OF_DAY) * 60 * 60;
@@ -231,24 +150,12 @@ public class CalendarUtil {
 		return seconds;
 	}
 
-	/**
-	 * 
-	 * @param date
-	 * @param maxHeight
-	 * @return
-	 */
 	public static int secondsToPixels(final Date date, int maxHeight) {
 		long seconds = getTotalSeconds(date);
 		int pixel = Math.round(seconds * maxHeight / 86400.0f);
 		return pixel;
 	}
 
-	/**
-	 * 
-	 * @param calendarEntries
-	 * @return a map of {@link JCalendarEntry} and a {@link Collection} of its
-	 *         corresponding conflicting entries
-	 */
 	public static Map<JCalendarEntry, List<JCalendarEntry>> getConflicting(Collection<JCalendarEntry> calendarEntries) {
 		List<JCalendarEntry> clonedCollection = new ArrayList<JCalendarEntry>(calendarEntries);
 
@@ -257,7 +164,6 @@ public class CalendarUtil {
 		for (int i = 0; i < clonedCollection.size(); i++) {
 			JCalendarEntry entry1 = clonedCollection.get(i);
 			conflictingEntries.put(entry1, new ArrayList<JCalendarEntry>());
-			// conflictingEntries.get(entry1).add(entry1);
 			for (int j = 0; j < clonedCollection.size(); j++) {
 				JCalendarEntry entry2 = clonedCollection.get(j);
 				if (entry2.isAllDay())
