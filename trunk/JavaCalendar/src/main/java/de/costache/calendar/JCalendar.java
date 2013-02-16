@@ -32,12 +32,12 @@ import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections.collection.UnmodifiableCollection;
 
-import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.IntervalChangedEvent;
 import de.costache.calendar.events.IntervalChangedListener;
+import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.SelectionChangedListener;
-import de.costache.calendar.format.DefaultCalendarEventFormat;
 import de.costache.calendar.format.CalendarEventFormat;
+import de.costache.calendar.format.DefaultCalendarEventFormat;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.ui.ContentPanel;
 import de.costache.calendar.ui.HeaderPanel;
@@ -165,7 +165,6 @@ public class JCalendar extends JPanel {
 
 	public void setSelectedDay(Date selectedDay) {
 		this.selectedDay = CalendarUtil.getCalendar(selectedDay, true);
-		System.out.println(selectedDay);
 	}
 
 	/**
