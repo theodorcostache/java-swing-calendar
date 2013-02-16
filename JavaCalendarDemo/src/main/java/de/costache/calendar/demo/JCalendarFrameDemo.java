@@ -31,14 +31,14 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import de.costache.calendar.JCalendar;
-import de.costache.calendar.events.CollectionChangedEvent;
-import de.costache.calendar.events.CollectionChangedListener;
 import de.costache.calendar.events.IntervalChangedEvent;
 import de.costache.calendar.events.IntervalChangedListener;
+import de.costache.calendar.events.ModelChangedEvent;
+import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.SelectionChangedEvent;
 import de.costache.calendar.events.SelectionChangedListener;
-import de.costache.calendar.model.JCalendarEntry;
-import de.costache.calendar.model.JCalendarEntryType;
+import de.costache.calendar.model.CalendarEvent;
+import de.costache.calendar.model.EventType;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
 import de.costache.calendar.util.CalendarUtil;
 
@@ -114,9 +114,9 @@ public class JCalendarFrameDemo extends JFrame {
 				final int year = 2010 + r.nextInt(8);
 				final Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
 				final Date end = CalendarUtil.createDate(year, month, day, hour + 1 + r.nextInt(4), r.nextInt(59), 0, 0);
-				final JCalendarEntry calendarEntry = new JCalendarEntry("Added ", start, end);
+				final CalendarEvent calendarEvent = new CalendarEvent("Added ", start, end);
 
-				jCalendar.addCalendarEntry(calendarEntry);
+				jCalendar.addCalendarEvent(calendarEvent);
 				jCalendar.setDisplayStrategy(Type.DAY, start);
 			}
 		});
@@ -125,9 +125,9 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void actionPerformed(final ActionEvent arg0) {
-				final Collection<JCalendarEntry> selected = jCalendar.getSelectedEntries();
-				for (final JCalendarEntry entry : selected) {
-					jCalendar.removeCalendarEntry(entry);
+				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+				for (final CalendarEvent event : selected) {
+					jCalendar.removeCalendarEvent(event);
 				}
 			}
 		});
@@ -139,9 +139,9 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final Collection<JCalendarEntry> selected = jCalendar.getSelectedEntries();
-				for (final JCalendarEntry entry : selected) {
-					jCalendar.removeCalendarEntry(entry);
+				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+				for (final CalendarEvent event : selected) {
+					jCalendar.removeCalendarEvent(event);
 				}
 			}
 		});
@@ -167,20 +167,20 @@ public class JCalendarFrameDemo extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 
-		final JCalendarEntryType type1 = new JCalendarEntryType();
+		final EventType type1 = new EventType();
 
-		final JCalendarEntryType type2 = new JCalendarEntryType();
+		final EventType type2 = new EventType();
 		type2.setBackgroundColor(new Color(255, 103, 0, 128));
 
-		final JCalendarEntryType type3 = new JCalendarEntryType();
+		final EventType type3 = new EventType();
 		type3.setBackgroundColor(new Color(165, 103, 230, 128));
 
-		final JCalendarEntryType[] types = new JCalendarEntryType[3];
+		final EventType[] types = new EventType[3];
 		types[0] = type1;
 		types[1] = type2;
 		types[2] = type3;
 
-		JCalendarEntry calendarEntry;
+		CalendarEvent calendarEvent;
 		for (int i = 0; i < 10000; i++) {
 			final int hour = r.nextInt(19);
 			final int min = r.nextInt(59);
@@ -189,38 +189,38 @@ public class JCalendarFrameDemo extends JFrame {
 			final int year = 2010 + r.nextInt(6);
 			final Date start = CalendarUtil.createDate(year, month, day, hour, min, 0, 0);
 			final Date end = CalendarUtil.createDate(year, month, day, hour + 1 + r.nextInt(4), r.nextInt(59), 0, 0);
-			calendarEntry = new JCalendarEntry(names[r.nextInt(3)], start, end);
-			calendarEntry.setType(types[r.nextInt(3)]);
-			calendarEntry.setAllDay(i % 2 == 0);
-			jCalendar.addCalendarEntry(calendarEntry);
+			calendarEvent = new CalendarEvent(names[r.nextInt(3)], start, end);
+			calendarEvent.setType(types[r.nextInt(3)]);
+			calendarEvent.setAllDay(i % 2 == 0);
+			jCalendar.addCalendarEvent(calendarEvent);
 		}
 
 		Date start = CalendarUtil.createDate(2013, 1, 31, 12, 45, 0, 0);
 		Date end = CalendarUtil.createDate(2013, 1, 31, 16, 35, 0, 0);
-		calendarEntry = new JCalendarEntry("Overlapping", start, end);
-		jCalendar.addCalendarEntry(calendarEntry);
+		calendarEvent = new CalendarEvent("Overlapping", start, end);
+		jCalendar.addCalendarEvent(calendarEvent);
 
 		start = CalendarUtil.createDate(2013, 1, 31, 8, 45, 0, 0);
 		end = CalendarUtil.createDate(2013, 1, 31, 15, 35, 0, 0);
-		calendarEntry = new JCalendarEntry("Overlapping 2", start, end);
-		jCalendar.addCalendarEntry(calendarEntry);
+		calendarEvent = new CalendarEvent("Overlapping 2", start, end);
+		jCalendar.addCalendarEvent(calendarEvent);
 		jCalendar.setJPopupMenu(popup);
 
-		jCalendar.addCollectionChangedListener(new CollectionChangedListener() {
+		jCalendar.addCollectionChangedListener(new ModelChangedListener() {
 
 			@Override
-			public void itemRemoved(final CollectionChangedEvent event) {
-				description.append("Entry removed " + event.getValue() + "\n");
+			public void eventRemoved(final ModelChangedEvent event) {
+				description.append("Event removed " + event.getCalendarEvent() + "\n");
 			}
 
 			@Override
-			public void itemChanged(final CollectionChangedEvent event) {
-				description.append("Entry changed " + event.getValue() + "\n");
+			public void eventChanged(final ModelChangedEvent event) {
+				description.append("Event changed " + event.getCalendarEvent() + "\n");
 			}
 
 			@Override
-			public void itemAdded(final CollectionChangedEvent event) {
-				description.append("Entry added " + event.getValue() + "\n");
+			public void eventAdded(final ModelChangedEvent event) {
+				description.append("Event added " + event.getCalendarEvent() + "\n");
 			}
 		});
 
@@ -228,11 +228,11 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
-				if (event.getEntry() != null) {
-					if (event.getEntry().isSelected()) {
-						description.append("Entry selected " + event.getEntry());
+				if (event.getCalendarEvent() != null) {
+					if (event.getCalendarEvent().isSelected()) {
+						description.append("Event selected " + event.getCalendarEvent());
 					} else {
-						description.append("Entry deselected " + event.getEntry());
+						description.append("Event deselected " + event.getCalendarEvent());
 					}
 				} else {
 					description.append("Selection cleared");
@@ -262,7 +262,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				removeMi.setEnabled(jCalendar.getSelectedEntries().size() > 0);
+				removeMi.setEnabled(jCalendar.getSelectedEvents().size() > 0);
 			}
 
 			@Override
