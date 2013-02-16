@@ -164,69 +164,38 @@ public class CalendarUtil {
 	/**
 	 * @param from
 	 *            from his date on
-	 * @param x
+	 * @param amount
 	 *            number of days in future
-	 * @return Date in x days from now on
-	 */
-	public static final Date createInDays(final Date from, final int x) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(from);
-		cal.add(Calendar.DATE, x);
-		return cal.getTime();
-	}
-
-	/**
-	 * creates the date which is x workdays days after/before the given date
-	 * 
-	 * @param from
-	 * @param x
 	 * @return
 	 */
-	public static final Date createInWorkDays(final Date from, final int x) {
+	public static final Date createInDays(final Date from, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(from);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		if (x == 0) {
-			return cal.getTime();
-		}
-
-		int days = 0;
-		final int addDay = x > 0 ? 1 : -1;
-		while (days < Math.abs(x)) {
-			cal.add(Calendar.DATE, addDay);
-			final int wochentag = cal.get(Calendar.DAY_OF_WEEK);
-			if (wochentag != Calendar.SATURDAY && wochentag != Calendar.SUNDAY) {
-				days++;
-			}
-		}
+		cal.add(Calendar.DATE, amount);
 		return cal.getTime();
 	}
 
 	/**
-	 * @param x
+	 * @param amount
 	 *            number of weeks in future
-	 * @return Date in x weeks from now on
+	 * @return
 	 */
-	public static final Date createInWeeks(final Date date, final int x) {
+	public static final Date createInWeeks(final Date date, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(Calendar.WEEK_OF_YEAR, x);
+		cal.add(Calendar.WEEK_OF_YEAR, amount);
 		return cal.getTime();
 	}
 
 	/**
-	 * @param x
+	 * @param amount
 	 *            number of months in future
-	 * @return Date in x months from now on
+	 * @return
 	 */
-	public static final Date createInMonths(final Date date, final int x) {
+	public static final Date createInMonths(final Date date, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(Calendar.MONTH, x);
+		cal.add(Calendar.MONTH, amount);
 		return cal.getTime();
 	}
 
@@ -274,6 +243,12 @@ public class CalendarUtil {
 		return pixel;
 	}
 
+	/**
+	 * 
+	 * @param calendarEntries
+	 * @return a map of {@link JCalendarEntry} and a {@link Collection} of its
+	 *         corresponding conflicting entries
+	 */
 	public static Map<JCalendarEntry, List<JCalendarEntry>> getConflicting(Collection<JCalendarEntry> calendarEntries) {
 		List<JCalendarEntry> clonedCollection = new ArrayList<JCalendarEntry>(calendarEntries);
 
