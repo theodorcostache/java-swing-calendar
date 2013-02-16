@@ -32,20 +32,20 @@ import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections.collection.UnmodifiableCollection;
 
-import de.costache.calendar.events.CollectionChangedListener;
+import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.IntervalChangedEvent;
 import de.costache.calendar.events.IntervalChangedListener;
 import de.costache.calendar.events.SelectionChangedListener;
-import de.costache.calendar.format.DefaultJCalendarEntryFormat;
-import de.costache.calendar.format.JCalendarEntryFormat;
-import de.costache.calendar.model.JCalendarEntry;
+import de.costache.calendar.format.DefaultCalendarEventFormat;
+import de.costache.calendar.format.CalendarEventFormat;
+import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.ui.ContentPanel;
 import de.costache.calendar.ui.HeaderPanel;
 import de.costache.calendar.ui.strategy.DisplayStrategy;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
 import de.costache.calendar.ui.strategy.DisplayStrategyFactory;
 import de.costache.calendar.util.CalendarUtil;
-import de.costache.calendar.util.EntryCollectionRepository;
+import de.costache.calendar.util.EventCollectionRepository;
 
 /**
  * 
@@ -69,7 +69,7 @@ public class JCalendar extends JPanel {
 
 	private JPopupMenu popupMenu;
 
-	private JCalendarEntryFormat formater;
+	private CalendarEventFormat formater;
 
 	private Calendar selectedDay;
 
@@ -79,13 +79,13 @@ public class JCalendar extends JPanel {
 	public JCalendar() {
 		listeners = new ArrayList<IntervalChangedListener>();
 		config = new Config();
-		formater = new DefaultJCalendarEntryFormat();
+		formater = new DefaultCalendarEventFormat();
 		selectedDay = Calendar.getInstance();
 
 		initGui();
 		bindListeners();
 
-		EntryCollectionRepository.register(this);
+		EventCollectionRepository.register(this);
 
 	}
 
@@ -196,12 +196,12 @@ public class JCalendar extends JPanel {
 	}
 
 	/**
-	 * Returns a {@link Collection} of selected {@link JCalendarEntry}
+	 * Returns a {@link Collection} of selected {@link CalendarEvent}
 	 * 
 	 * @return an {@link UnmodifiableCollection}
 	 */
-	public Collection<JCalendarEntry> getSelectedEntries() {
-		return EntryCollectionRepository.get(this).getSelectedEntries();
+	public Collection<CalendarEvent> getSelectedEvents() {
+		return EventCollectionRepository.get(this).getSelectedEvents();
 	}
 
 	/**
@@ -226,16 +226,16 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param listener
 	 */
-	public void addCollectionChangedListener(final CollectionChangedListener listener) {
-		EntryCollectionRepository.get(this).addCollectionChangedListener(listener);
+	public void addCollectionChangedListener(final ModelChangedListener listener) {
+		EventCollectionRepository.get(this).addCollectionChangedListener(listener);
 	}
 
 	/**
 	 * 
 	 * @param listener
 	 */
-	public void removeCollectionChangedListener(final CollectionChangedListener listener) {
-		EntryCollectionRepository.get(this).removeCollectionChangedListener(listener);
+	public void removeCollectionChangedListener(final ModelChangedListener listener) {
+		EventCollectionRepository.get(this).removeCollectionChangedListener(listener);
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class JCalendar extends JPanel {
 	 * @param selectionChangedListener
 	 */
 	public void addSelectionChangedListener(SelectionChangedListener selectionChangedListener) {
-		EntryCollectionRepository.get(this).addSelectionChangedListener(selectionChangedListener);
+		EventCollectionRepository.get(this).addSelectionChangedListener(selectionChangedListener);
 	}
 
 	/**
@@ -251,25 +251,25 @@ public class JCalendar extends JPanel {
 	 * @param selectionChangedListener
 	 */
 	public void removeSelectionChangedListener(SelectionChangedListener selectionChangedListener) {
-		EntryCollectionRepository.get(this).removeSelectionChangedListener(selectionChangedListener);
+		EventCollectionRepository.get(this).removeSelectionChangedListener(selectionChangedListener);
 	}
 
 	/**
 	 * 
-	 * @param entry
+	 * @param event
 	 */
-	public void addCalendarEntry(JCalendarEntry entry) {
-		EntryCollectionRepository.get(this).add(entry);
+	public void addCalendarEvent(CalendarEvent event) {
+		EventCollectionRepository.get(this).add(event);
 		validate();
 		repaint();
 	}
 
 	/**
 	 * 
-	 * @param entry
+	 * @param event
 	 */
-	public void removeCalendarEntry(JCalendarEntry entry) {
-		EntryCollectionRepository.get(this).remove(entry);
+	public void removeCalendarEvent(CalendarEvent event) {
+		EventCollectionRepository.get(this).remove(event);
 		validate();
 		repaint();
 	}
@@ -316,11 +316,11 @@ public class JCalendar extends JPanel {
 		this.popupMenu = popupMenu;
 	}
 
-	public JCalendarEntryFormat getFormater() {
+	public CalendarEventFormat getTooltipFormater() {
 		return formater;
 	}
 
-	public void setFormater(JCalendarEntryFormat formater) {
+	public void setTooltipFormater(CalendarEventFormat formater) {
 		this.formater = formater;
 	}
 }

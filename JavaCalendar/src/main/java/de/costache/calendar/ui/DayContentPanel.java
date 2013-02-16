@@ -34,11 +34,11 @@ import javax.swing.JToolTip;
 
 import de.costache.calendar.Config;
 import de.costache.calendar.JCalendar;
-import de.costache.calendar.model.JCalendarEntry;
+import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
 import de.costache.calendar.util.CalendarUtil;
-import de.costache.calendar.util.EntryCollection;
-import de.costache.calendar.util.EntryCollectionRepository;
+import de.costache.calendar.util.EventCollection;
+import de.costache.calendar.util.EventCollectionRepository;
 import de.costache.calendar.util.GraphicsUtil;
 
 /**
@@ -74,22 +74,22 @@ public class DayContentPanel extends JPanel {
 				super.mouseClicked(e);
 				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
 				final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
-				final JCalendarEntry entry = isSelectedStrategyMonth ? getEntryForMonth(e.getX(), e.getY())
-						: getNotMonthEntry(e.getX(), e.getY());
+				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(e.getX(), e.getY())
+						: getNotMonthEvent(e.getX(), e.getY());
 
 				if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
 
-					final EntryCollection entries = EntryCollectionRepository.get(calendar);
+					final EventCollection events = EventCollectionRepository.get(calendar);
 
 					if (!e.isControlDown()) {
-						entries.clearSelected(entry, true);
+						events.clearSelected(event, true);
 					}
-					if (entry != null) {
-						entry.setSelected(!entry.isSelected());
-						if (entry.isSelected()) {
-							entries.addSelected(entry);
+					if (event != null) {
+						event.setSelected(!event.isSelected());
+						if (event.isSelected()) {
+							events.addSelected(event);
 						} else {
-							entries.removeSelected(entry);
+							events.removeSelected(event);
 						}
 					}
 
@@ -136,10 +136,10 @@ public class DayContentPanel extends JPanel {
 
 				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
 				final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
-				final JCalendarEntry entry = isSelectedStrategyMonth ? getEntryForMonth(e.getX(), e.getY())
-						: getNotMonthEntry(e.getX(), e.getY());
-				if (entry != null) {
-					setToolTipText(calendar.getFormater().format(entry));
+				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(e.getX(), e.getY())
+						: getNotMonthEvent(e.getX(), e.getY());
+				if (event != null) {
+					setToolTipText(calendar.getTooltipFormater().format(event));
 				} else {
 					setToolTipText(null);
 				}
@@ -161,9 +161,9 @@ public class DayContentPanel extends JPanel {
 		super.paint(g);
 		drawBackground((Graphics2D) g);
 		if (owner.getOwner().getDisplayStrategy() != Type.MONTH) {
-			drawCalendarEntries((Graphics2D) g);
+			drawCalendarEvents((Graphics2D) g);
 		} else {
-			drawCalendarEntriesMonth((Graphics2D) g);
+			drawCalendarEventsMonth((Graphics2D) g);
 		}
 	}
 
@@ -209,115 +209,115 @@ public class DayContentPanel extends JPanel {
 
 	}
 
-	private void drawCalendarEntries(final Graphics2D graphics2d) {
+	private void drawCalendarEvents(final Graphics2D graphics2d) {
 
-		final EntryCollection entryCollection = EntryCollectionRepository.get(owner.getOwner());
-		final Collection<JCalendarEntry> entries = entryCollection.getCalendarEntries(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
 
-		final Map<JCalendarEntry, List<JCalendarEntry>> conflictingEntries = CalendarUtil.getConflicting(entries);
+		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = CalendarUtil.getConflicting(events);
 
 		final Config config = owner.getOwner().getConfig();
-		if (entries.size() > 0) {
-			for (final JCalendarEntry entry : entries) {
-				if (entry.isAllDay())
+		if (events.size() > 0) {
+			for (final CalendarEvent event : events) {
+				if (event.isAllDay())
 					continue;
-				Color bgColor = entry.getType().getBackgroundColor();
-				bgColor = bgColor == null ? config.getEntryDefaultBackgroundColor() : bgColor;
-				Color fgColor = entry.getType().getForegroundColor();
-				fgColor = fgColor == null ? config.getEntryDefaultForegroundColor() : fgColor;
+				Color bgColor = event.getType().getBackgroundColor();
+				bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
+				Color fgColor = event.getType().getForegroundColor();
+				fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
 
-				graphics2d.setColor(!entry.isSelected() ? bgColor : bgColor.darker().darker());
-				int entryYStart = 0;
+				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
+				int eventStart = 0;
 
-				final boolean isSameStartDay = CalendarUtil.isSameDay(entry.getStart(), owner.getDate());
+				final boolean isSameStartDay = CalendarUtil.isSameDay(event.getStart(), owner.getDate());
 				if (isSameStartDay) {
-					entryYStart = CalendarUtil.secondsToPixels(entry.getStart(), getHeight());
+					eventStart = CalendarUtil.secondsToPixels(event.getStart(), getHeight());
 				}
 
-				int entryYEnd = getHeight();
-				if (CalendarUtil.isSameDay(entry.getEnd(), owner.getDate())) {
-					entryYEnd = CalendarUtil.secondsToPixels(entry.getEnd(), getHeight());
+				int eventYEnd = getHeight();
+				if (CalendarUtil.isSameDay(event.getEnd(), owner.getDate())) {
+					eventYEnd = CalendarUtil.secondsToPixels(event.getEnd(), getHeight());
 				}
 
-				final int conflictIndex = conflictingEntries.get(entry).indexOf(entry);
-				final int conflictingEntriesSize = conflictingEntries.get(entry).size();
+				final int conflictIndex = conflictingEvents.get(event).indexOf(event);
+				final int conflictingEventsSize = conflictingEvents.get(event).size();
 
-				graphics2d.fillRoundRect(conflictIndex * (getWidth() - 4) / conflictingEntriesSize, entryYStart,
-						(getWidth() - 4) / conflictingEntriesSize - 2, entryYEnd - entryYStart, 12, 12);
-				final String entryString = sdf.format(entry.getStart()) + " " + sdf.format(entry.getEnd()) + " "
-						+ entry.getSummary();
+				graphics2d.fillRoundRect(conflictIndex * (getWidth() - 4) / conflictingEventsSize, eventStart,
+						(getWidth() - 4) / conflictingEventsSize - 2, eventYEnd - eventStart, 12, 12);
+				final String eventString = sdf.format(event.getStart()) + " " + sdf.format(event.getEnd()) + " "
+						+ event.getSummary();
 
 				graphics2d.setFont(new Font("Verdana", Font.BOLD, 9));
-				graphics2d.setColor(!entry.isSelected() ? fgColor : Color.white);
+				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
 
-				GraphicsUtil.drawString(graphics2d, entryString, conflictIndex * (getWidth() - 4)
-						/ conflictingEntriesSize + 3, entryYStart + 11, (getWidth() - 4) / conflictingEntriesSize - 3,
-						entryYEnd - entryYStart);
+				GraphicsUtil.drawString(graphics2d, eventString, conflictIndex * (getWidth() - 4)
+						/ conflictingEventsSize + 3, eventStart + 11, (getWidth() - 4) / conflictingEventsSize - 3,
+						eventYEnd - eventStart);
 
 			}
 		}
 	}
 
-	private JCalendarEntry getNotMonthEntry(final int x, final int y) {
+	private CalendarEvent getNotMonthEvent(final int x, final int y) {
 
-		final EntryCollection entryCollection = EntryCollectionRepository.get(owner.getOwner());
-		final Collection<JCalendarEntry> entries = entryCollection.getCalendarEntries(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
 
-		final Map<JCalendarEntry, List<JCalendarEntry>> conflictingEntries = CalendarUtil.getConflicting(entries);
+		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = CalendarUtil.getConflicting(events);
 
-		if (entries.size() > 0) {
-			for (final JCalendarEntry entry : entries) {
-				if (entry.isAllDay())
+		if (events.size() > 0) {
+			for (final CalendarEvent event : events) {
+				if (event.isAllDay())
 					continue;
-				int entryYStart = 0;
 
-				final boolean isSameStartDay = CalendarUtil.isSameDay(entry.getStart(), owner.getDate());
+				int eventYStart = 0;
+				final boolean isSameStartDay = CalendarUtil.isSameDay(event.getStart(), owner.getDate());
 				if (isSameStartDay) {
-					entryYStart = CalendarUtil.secondsToPixels(entry.getStart(), getHeight());
+					eventYStart = CalendarUtil.secondsToPixels(event.getStart(), getHeight());
 				}
 
-				int entryYEnd = getHeight();
-				if (CalendarUtil.isSameDay(entry.getEnd(), owner.getDate())) {
-					entryYEnd = CalendarUtil.secondsToPixels(entry.getEnd(), getHeight());
+				int eventYEnd = getHeight();
+				if (CalendarUtil.isSameDay(event.getEnd(), owner.getDate())) {
+					eventYEnd = CalendarUtil.secondsToPixels(event.getEnd(), getHeight());
 				}
 
-				final int conflictIndex = conflictingEntries.get(entry).indexOf(entry);
-				final int conflictingEntriesSize = conflictingEntries.get(entry).size();
+				final int conflictIndex = conflictingEvents.get(event).indexOf(event);
+				final int conflictingEventsSize = conflictingEvents.get(event).size();
 
-				final int rectXStart = conflictIndex * (getWidth() - 4) / conflictingEntriesSize;
-				final int rectYStart = entryYStart;
+				final int rectXStart = conflictIndex * (getWidth() - 4) / conflictingEventsSize;
+				final int rectYStart = eventYStart;
 
-				final int rectWidth = (getWidth() - 4) / conflictingEntriesSize - 2;
+				final int rectWidth = (getWidth() - 4) / conflictingEventsSize - 2;
 
-				final int rectHeight = entryYEnd - entryYStart;
+				final int rectHeight = eventYEnd - eventYStart;
 
 				final Rectangle r = new Rectangle(rectXStart, rectYStart, rectWidth, rectHeight);
 				if (r.contains(x, y)) {
-					return entry;
+					return event;
 				}
 			}
 		}
 		return null;
 	}
 
-	private void drawCalendarEntriesMonth(final Graphics2D graphics2d) {
+	private void drawCalendarEventsMonth(final Graphics2D graphics2d) {
 
-		final EntryCollection entryCollection = EntryCollectionRepository.get(owner.getOwner());
-		final Collection<JCalendarEntry> entries = entryCollection.getCalendarEntries(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
 		int pos = 2;
-		if (entries.size() > 0) {
+		if (events.size() > 0) {
 			final Config config = owner.getOwner().getConfig();
-			for (final JCalendarEntry entry : entries) {
+			for (final CalendarEvent event : events) {
 
-				Color bgColor = entry.getType().getBackgroundColor();
-				bgColor = bgColor == null ? config.getEntryDefaultBackgroundColor() : bgColor;
-				Color fgColor = entry.getType().getForegroundColor();
-				fgColor = fgColor == null ? config.getEntryDefaultForegroundColor() : fgColor;
-				graphics2d.setColor(!entry.isSelected() ? bgColor : bgColor.darker().darker());
+				Color bgColor = event.getType().getBackgroundColor();
+				bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
+				Color fgColor = event.getType().getForegroundColor();
+				fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
+				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
 				graphics2d.fillRect(2, pos, getWidth() - 4, 15);
 
-				final String entryString = sdf.format(entry.getStart()) + " " + sdf.format(entry.getEnd()) + " "
-						+ entry.getSummary();
+				final String eventString = sdf.format(event.getStart()) + " " + sdf.format(event.getEnd()) + " "
+						+ event.getSummary();
 				int fontSize = Math.round(getHeight() * 0.5f);
 				fontSize = fontSize > 9 ? 9 : fontSize;
 
@@ -325,8 +325,8 @@ public class DayContentPanel extends JPanel {
 				final FontMetrics metrics = graphics2d.getFontMetrics(font);
 				graphics2d.setFont(font);
 
-				graphics2d.setColor(!entry.isSelected() ? fgColor : Color.white);
-				GraphicsUtil.drawTrimmedString(graphics2d, entryString, 6,
+				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
+				GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6,
 						pos + (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
 
 				pos += 17;
@@ -334,14 +334,14 @@ public class DayContentPanel extends JPanel {
 		}
 	}
 
-	private JCalendarEntry getEntryForMonth(final int x, final int y) {
+	private CalendarEvent getEventForMonth(final int x, final int y) {
 
-		final EntryCollection entryCollection = EntryCollectionRepository.get(owner.getOwner());
-		final Collection<JCalendarEntry> entries = entryCollection.getCalendarEntries(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
 
 		int pos = 2;
-		if (entries.size() > 0) {
-			for (final JCalendarEntry entry : entries) {
+		if (events.size() > 0) {
+			for (final CalendarEvent event : events) {
 
 				final int rectXStart = 2;
 				final int rectYStart = pos;
@@ -352,7 +352,7 @@ public class DayContentPanel extends JPanel {
 
 				final Rectangle r = new Rectangle(rectXStart, rectYStart, rectWidth, rectHeight);
 				if (r.contains(x, y)) {
-					return entry;
+					return event;
 				}
 
 				pos += 17;

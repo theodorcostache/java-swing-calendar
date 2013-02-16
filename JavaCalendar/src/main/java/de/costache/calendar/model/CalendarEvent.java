@@ -23,7 +23,7 @@ import java.util.Observable;
  * @author theodorcostache
  * 
  */
-public class JCalendarEntry extends Observable implements Comparable<JCalendarEntry> {
+public class CalendarEvent extends Observable implements Comparable<CalendarEvent> {
 
 	public enum Property {
 		SUMMARY, DESCRIPTION, LOCATION, START, END, TYPE, ALLDAY, PRIORITY
@@ -34,7 +34,7 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 	private String location;
 	private Date start;
 	private Date end;
-	private JCalendarEntryType type;
+	private EventType type;
 	private boolean selected;
 	private boolean allDay;
 	private int priority;
@@ -42,30 +42,30 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 	/**
 	 * 
 	 */
-	public JCalendarEntry() {
-		type = new JCalendarEntryType();
+	public CalendarEvent() {
+		type = new EventType();
 		type.setName("default");
 	}
 
-	public JCalendarEntry(final Date start, final Date end) {
+	public CalendarEvent(final Date start, final Date end) {
 		this();
 		this.start = start;
 		this.end = end;
 	}
 
-	public JCalendarEntry(final String summary, final Date start, final Date end) {
+	public CalendarEvent(final String summary, final Date start, final Date end) {
 		this(start, end);
 		this.summary = summary;
 		this.start = start;
 		this.end = end;
 	}
 
-	public JCalendarEntry(final Date start, final Date end, final JCalendarEntryType type) {
+	public CalendarEvent(final Date start, final Date end, final EventType type) {
 		this(start, end);
 		this.type = type;
 	}
 
-	public JCalendarEntry(final String sumamry, final Date start, final Date end, final JCalendarEntryType type) {
+	public CalendarEvent(final String sumamry, final Date start, final Date end, final EventType type) {
 		this(sumamry, start, end);
 		this.type = type;
 	}
@@ -163,7 +163,7 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 	/**
 	 * @return the type
 	 */
-	public JCalendarEntryType getType() {
+	public EventType getType() {
 		return type;
 	}
 
@@ -171,7 +171,7 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 	 * @param type
 	 *            the type to set
 	 */
-	public void setType(final JCalendarEntryType type) {
+	public void setType(final EventType type) {
 		this.type = type;
 		setChanged();
 		notifyObservers(Property.TYPE);
@@ -248,7 +248,7 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final JCalendarEntry other = (JCalendarEntry) obj;
+		final CalendarEvent other = (CalendarEvent) obj;
 		if (end == null) {
 			if (other.end != null)
 				return false;
@@ -268,7 +268,7 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 	}
 
 	@Override
-	public int compareTo(final JCalendarEntry o) {
+	public int compareTo(final CalendarEvent o) {
 		final int comp = start.compareTo(o.getStart());
 		if (comp == 0)
 			return end.compareTo(o.getEnd());
@@ -282,7 +282,7 @@ public class JCalendarEntry extends Observable implements Comparable<JCalendarEn
 	 */
 	@Override
 	public String toString() {
-		return "JCalendarEntry [start=" + start + ", end=" + end + ", type=" + type + "]";
+		return "CalendarEvent [start=" + start + ", end=" + end + ", type=" + type + "]";
 	}
 
 }

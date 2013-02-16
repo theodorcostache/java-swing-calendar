@@ -17,7 +17,7 @@ package de.costache.calendar.events;
 
 import java.io.Serializable;
 
-import de.costache.calendar.model.JCalendarEntry;
+import de.costache.calendar.model.CalendarEvent;
 
 /**
  * 
@@ -30,21 +30,21 @@ public class SelectionChangedEvent implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	JCalendarEntry entry;
+	CalendarEvent calendarEvent;
 
 	public SelectionChangedEvent() {
 
 	}
 
-	public SelectionChangedEvent(JCalendarEntry entry) {
-		this.entry = entry;
+	public SelectionChangedEvent(CalendarEvent calendarEvent) {
+		this.calendarEvent = calendarEvent;
 	}
 
-	public JCalendarEntry getEntry() {
-		return entry;
+	public CalendarEvent getCalendarEvent() {
+		return calendarEvent;
 	}
 
-	public void setEntry(JCalendarEntry entry) {
-		this.entry = entry;
+	public void setCalendarEvent(CalendarEvent calendarEvent) {
+		this.calendarEvent = calendarEvent;
 	}
 }

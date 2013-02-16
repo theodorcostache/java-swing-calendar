@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.costache.calendar.model.JCalendarEntry;
+import de.costache.calendar.model.CalendarEvent;
 
 /**
  * 
@@ -156,22 +156,22 @@ public class CalendarUtil {
 		return pixel;
 	}
 
-	public static Map<JCalendarEntry, List<JCalendarEntry>> getConflicting(Collection<JCalendarEntry> calendarEntries) {
-		List<JCalendarEntry> clonedCollection = new ArrayList<JCalendarEntry>(calendarEntries);
+	public static Map<CalendarEvent, List<CalendarEvent>> getConflicting(Collection<CalendarEvent> calendarEvents) {
+		List<CalendarEvent> clonedCollection = new ArrayList<CalendarEvent>(calendarEvents);
 
-		Map<JCalendarEntry, List<JCalendarEntry>> conflictingEntries = new HashMap<JCalendarEntry, List<JCalendarEntry>>();
+		Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = new HashMap<CalendarEvent, List<CalendarEvent>>();
 
 		for (int i = 0; i < clonedCollection.size(); i++) {
-			JCalendarEntry entry1 = clonedCollection.get(i);
-			conflictingEntries.put(entry1, new ArrayList<JCalendarEntry>());
+			CalendarEvent event1 = clonedCollection.get(i);
+			conflictingEvents.put(event1, new ArrayList<CalendarEvent>());
 			for (int j = 0; j < clonedCollection.size(); j++) {
-				JCalendarEntry entry2 = clonedCollection.get(j);
-				if (entry2.isAllDay())
+				CalendarEvent event2 = clonedCollection.get(j);
+				if (event2.isAllDay())
 					continue;
-				Date startA = entry1.getStart();
-				Date endA = entry1.getEnd();
-				Date startB = entry2.getStart();
-				Date endB = entry2.getEnd();
+				Date startA = event1.getStart();
+				Date endA = event1.getEnd();
+				Date startB = event2.getStart();
+				Date endB = event2.getEnd();
 
 				boolean isStartABeforeEndB = (startA.compareTo(endB)) < 0;
 				boolean isEndAAfterStartB = (endA.compareTo(startB)) > 0;
@@ -181,36 +181,36 @@ public class CalendarUtil {
 				isCurrentPairOverlap = isStartABeforeEndB && isEndAAfterStartB;
 
 				if (isCurrentPairOverlap) {
-					conflictingEntries.get(entry1).add(entry2);
+					conflictingEvents.get(event1).add(event2);
 				}
 			}
 
-			Collections.sort(conflictingEntries.get(entry1));
+			Collections.sort(conflictingEvents.get(event1));
 		}
-		Set<JCalendarEntry> keys = new HashSet<JCalendarEntry>(conflictingEntries.keySet());
-		Map<JCalendarEntry, List<JCalendarEntry>> result = new HashMap<JCalendarEntry, List<JCalendarEntry>>();
+		Set<CalendarEvent> keys = new HashSet<CalendarEvent>(conflictingEvents.keySet());
+		Map<CalendarEvent, List<CalendarEvent>> result = new HashMap<CalendarEvent, List<CalendarEvent>>();
 
-		for (JCalendarEntry entry : keys) {
-			Set<JCalendarEntry> visitedEntries = new HashSet<JCalendarEntry>();
-			Set<JCalendarEntry> tempSet = new HashSet<JCalendarEntry>();
-			copyAll(visitedEntries, tempSet, conflictingEntries, entry);
-			List<JCalendarEntry> newConflictingEntriesList = new ArrayList<JCalendarEntry>(tempSet);
-			Collections.sort(newConflictingEntriesList);
-			result.put(entry, newConflictingEntriesList);
+		for (CalendarEvent event : keys) {
+			Set<CalendarEvent> visitedEvents = new HashSet<CalendarEvent>();
+			Set<CalendarEvent> tempSet = new HashSet<CalendarEvent>();
+			copyAll(visitedEvents, tempSet, conflictingEvents, event);
+			List<CalendarEvent> newConflictingEventsList = new ArrayList<CalendarEvent>(tempSet);
+			Collections.sort(newConflictingEventsList);
+			result.put(event, newConflictingEventsList);
 		}
 
 		return result;
 	}
 
-	private static void copyAll(Set<JCalendarEntry> visitedEntries, Set<JCalendarEntry> tempSet,
-			Map<JCalendarEntry, List<JCalendarEntry>> conflictingEntries, JCalendarEntry entry) {
+	private static void copyAll(Set<CalendarEvent> visitedEvents, Set<CalendarEvent> tempSet,
+			Map<CalendarEvent, List<CalendarEvent>> conflictingEvents, CalendarEvent event) {
 
-		for (JCalendarEntry ce : conflictingEntries.get(entry)) {
+		for (CalendarEvent ce : conflictingEvents.get(event)) {
 
-			if (!visitedEntries.contains(ce)) {
-				visitedEntries.add(ce);
-				tempSet.addAll(conflictingEntries.get(ce));
-				copyAll(visitedEntries, tempSet, conflictingEntries, ce);
+			if (!visitedEvents.contains(ce)) {
+				visitedEvents.add(ce);
+				tempSet.addAll(conflictingEvents.get(ce));
+				copyAll(visitedEvents, tempSet, conflictingEvents, ce);
 			}
 		}
 	}

@@ -22,7 +22,7 @@ import java.awt.Color;
  * @author theodorcostache
  * 
  */
-public class JCalendarEntryType {
+public class EventType {
 
 	private String name;
 	private Color backgroundColor;
@@ -31,7 +31,7 @@ public class JCalendarEntryType {
 	/**
 	 * 
 	 */
-	public JCalendarEntryType() {
+	public EventType() {
 
 	}
 
@@ -107,7 +107,7 @@ public class JCalendarEntryType {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final JCalendarEntryType other = (JCalendarEntryType) obj;
+		final EventType other = (EventType) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

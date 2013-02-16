@@ -13,20 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License. 
  */
-package de.costache.calendar.events;
+package de.costache.calendar.format;
 
-import java.util.EventListener;
+import de.costache.calendar.model.CalendarEvent;
 
-/**
- * 
- * @author theodorcostache
- * 
- */
-public interface CollectionChangedListener extends EventListener {
+public interface CalendarEventFormat {
 
-	public void itemAdded(CollectionChangedEvent event);
-
-	public void itemRemoved(CollectionChangedEvent event);
-
-	public void itemChanged(CollectionChangedEvent event);
+	public String format(CalendarEvent calendarEvent);
 }
