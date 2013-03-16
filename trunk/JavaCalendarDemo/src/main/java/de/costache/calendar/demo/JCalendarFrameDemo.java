@@ -302,7 +302,7 @@ public class JCalendarFrameDemo extends JFrame {
 	}
 
 	public static void main(final String[] args) {
-		Locale.setDefault(Locale.ENGLISH);
+		Locale.setDefault(Locale.CHINESE);
 		final JCalendarFrameDemo frameTest = new JCalendarFrameDemo();
 		frameTest.setVisible(true);
 	}
