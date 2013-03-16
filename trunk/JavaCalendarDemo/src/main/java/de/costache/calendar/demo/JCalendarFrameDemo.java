@@ -66,7 +66,7 @@ public class JCalendarFrameDemo extends JFrame {
 	private JPopupMenu popup;
 	private JMenuItem removeMenuItem;
 
-	private final String[] names = new String[] { "Meeting with John", "Shopping", "Business meeting",
+	private final String[] names = new String[] { "Team meeting", "Code review", "Project review",
 			"Telephone conference" };
 
 	private JButton removeButton;
@@ -152,7 +152,9 @@ public class JCalendarFrameDemo extends JFrame {
 
 		CalendarEvent calendarEvent;
 		for (int i = 0; i < 10000; i++) {
-			final int hour = r.nextInt(19);
+			int hour = r.nextInt(19);
+			hour = hour > 17 ? 17 : hour;
+			hour = hour < 8 ? 8 : hour;
 			final int min = r.nextInt(59);
 			final int day = r.nextInt(28);
 			final int month = r.nextInt(11);
@@ -300,7 +302,7 @@ public class JCalendarFrameDemo extends JFrame {
 	}
 
 	public static void main(final String[] args) {
-		Locale.setDefault(Locale.FRENCH);
+		Locale.setDefault(Locale.ENGLISH);
 		final JCalendarFrameDemo frameTest = new JCalendarFrameDemo();
 		frameTest.setVisible(true);
 	}
