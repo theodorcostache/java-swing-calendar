@@ -68,16 +68,31 @@ public class DayContentPanel extends JPanel {
 		this.owner = owner;
 
 		this.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseClicked(final MouseEvent e) {
-				super.mouseClicked(e);
+				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+					ml.mouseClicked(e);
+				}
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+
+				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+					ml.mouseReleased(e);
+				}
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+
 				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
+
 				final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
 				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(e.getX(), e.getY())
 						: getNotMonthEvent(e.getX(), e.getY());
 
-				if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
+				if (e.getClickCount() == 1) {
 
 					final EventCollection events = EventCollectionRepository.get(calendar);
 
@@ -85,7 +100,7 @@ public class DayContentPanel extends JPanel {
 						events.clearSelected(event, true);
 					}
 					if (event != null) {
-						event.setSelected(!event.isSelected());
+						event.setSelected(true);
 						if (event.isSelected()) {
 							events.addSelected(event);
 						} else {
@@ -97,28 +112,6 @@ public class DayContentPanel extends JPanel {
 					calendar.repaint();
 
 				}
-
-				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
-					ml.mouseClicked(e);
-				}
-			}
-
-			@Override
-			public void mouseReleased(final MouseEvent e) {
-				super.mouseReleased(e);
-				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
-				if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
-					calendar.getPopupMenu().show(DayContentPanel.this, e.getX(), e.getY());
-				}
-				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
-					ml.mouseReleased(e);
-				}
-			}
-
-			@Override
-			public void mousePressed(final MouseEvent e) {
-				super.mousePressed(e);
-				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
 				if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
 					calendar.getPopupMenu().show(DayContentPanel.this, e.getX(), e.getY());
 				}

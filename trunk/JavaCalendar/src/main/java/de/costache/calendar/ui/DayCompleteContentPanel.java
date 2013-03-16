@@ -60,7 +60,21 @@ public class DayCompleteContentPanel extends JPanel {
 
 			@Override
 			public void mouseClicked(final MouseEvent e) {
-				super.mouseClicked(e);
+				for (MouseListener ml : DayCompleteContentPanel.this.owner.getOwner().getMouseListeners()) {
+					ml.mouseClicked(e);
+				}
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				for (MouseListener ml : DayCompleteContentPanel.this.owner.getOwner().getMouseListeners()) {
+					ml.mouseReleased(e);
+				}
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+
 				final JCalendar calendar = DayCompleteContentPanel.this.owner.getOwner();
 				final CalendarEvent event = getEvent(e.getX(), e.getY());
 
@@ -72,7 +86,7 @@ public class DayCompleteContentPanel extends JPanel {
 						events.clearSelected(event, true);
 					}
 					if (event != null) {
-						event.setSelected(!event.isSelected());
+						event.setSelected(true);
 						if (event.isSelected()) {
 							events.addSelected(event);
 						} else {
@@ -84,39 +98,12 @@ public class DayCompleteContentPanel extends JPanel {
 					calendar.repaint();
 
 				}
-
-				for (MouseListener ml : DayCompleteContentPanel.this.owner.getOwner().getMouseListeners()) {
-					ml.mouseClicked(e);
-				}
-
-				e.consume();
-			}
-
-			@Override
-			public void mouseReleased(final MouseEvent e) {
-				super.mouseReleased(e);
-				final JCalendar calendar = DayCompleteContentPanel.this.owner.getOwner();
-				if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
-					calendar.getPopupMenu().show(DayCompleteContentPanel.this, e.getX(), e.getY());
-				}
-				for (MouseListener ml : DayCompleteContentPanel.this.owner.getOwner().getMouseListeners()) {
-					ml.mouseReleased(e);
-				}
-
-				e.consume();
-			}
-
-			@Override
-			public void mousePressed(final MouseEvent e) {
-				super.mousePressed(e);
-				final JCalendar calendar = DayCompleteContentPanel.this.owner.getOwner();
 				if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
 					calendar.getPopupMenu().show(DayCompleteContentPanel.this, e.getX(), e.getY());
 				}
 				for (MouseListener ml : DayCompleteContentPanel.this.owner.getOwner().getMouseListeners()) {
 					ml.mousePressed(e);
 				}
-				e.consume();
 			}
 
 		});
