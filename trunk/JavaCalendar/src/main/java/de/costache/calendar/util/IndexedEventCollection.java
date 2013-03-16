@@ -209,4 +209,8 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 	public void removeSelectionChangedListener(SelectionChangedListener listener) {
 		this.selectionChangedListeners.remove(listener);
 	}
+
+	public int size() {
+		return indexedEvents.size();
+	}
 }

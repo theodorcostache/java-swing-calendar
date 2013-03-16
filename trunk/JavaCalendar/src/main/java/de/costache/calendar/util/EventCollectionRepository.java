@@ -27,9 +27,9 @@ import de.costache.calendar.JCalendar;
  */
 public class EventCollectionRepository {
 
-	private final Map<JCalendar, IndexedEventCollection> repository;
+	final Map<JCalendar, IndexedEventCollection> repository;
 
-	private static final EventCollectionRepository instance = new EventCollectionRepository();
+	static final EventCollectionRepository instance = new EventCollectionRepository();
 
 	private EventCollectionRepository() {
 		repository = new HashMap<JCalendar, IndexedEventCollection>();

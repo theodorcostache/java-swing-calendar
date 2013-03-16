@@ -15,6 +15,10 @@ import java.util.Locale;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -301,7 +305,8 @@ public class JCalendarFrameDemo extends JFrame {
 		});
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws MalformedObjectNameException, NullPointerException,
+			InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
 		Locale.setDefault(Locale.CHINESE);
 		final JCalendarFrameDemo frameTest = new JCalendarFrameDemo();
 		frameTest.setVisible(true);
