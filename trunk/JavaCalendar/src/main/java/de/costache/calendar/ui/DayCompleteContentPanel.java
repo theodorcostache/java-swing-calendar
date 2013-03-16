@@ -38,7 +38,6 @@ import de.costache.calendar.util.EventCollectionRepository;
 import de.costache.calendar.util.GraphicsUtil;
 
 /**
- * s
  * 
  * @author theodorcostache
  * 

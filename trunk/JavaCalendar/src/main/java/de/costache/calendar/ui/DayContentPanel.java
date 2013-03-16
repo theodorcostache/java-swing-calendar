@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
-import javax.swing.JToolTip;
 
 import de.costache.calendar.Config;
 import de.costache.calendar.JCalendar;
@@ -56,8 +55,6 @@ public class DayContentPanel extends JPanel {
 	private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
 	private final DayPanel owner;
-
-	private final JToolTip toolTip = new JToolTip();
 
 	/**
 	 * Creates a new instance of {@link DayContentPanel}
