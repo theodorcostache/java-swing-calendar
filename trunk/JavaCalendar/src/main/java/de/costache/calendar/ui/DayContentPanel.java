@@ -15,19 +15,11 @@
  */
 package de.costache.calendar.ui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -35,10 +27,7 @@ import de.costache.calendar.Config;
 import de.costache.calendar.JCalendar;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
-import de.costache.calendar.util.CalendarUtil;
-import de.costache.calendar.util.EventCollection;
-import de.costache.calendar.util.EventCollectionRepository;
-import de.costache.calendar.util.GraphicsUtil;
+import de.costache.calendar.util.*;
 
 /**
  * 
@@ -56,6 +45,9 @@ public class DayContentPanel extends JPanel {
 
 	private final DayPanel owner;
 
+	private Point startSelection;
+	private Point endSelection;
+
 	/**
 	 * Creates a new instance of {@link DayContentPanel}
 	 */
@@ -67,7 +59,7 @@ public class DayContentPanel extends JPanel {
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
-				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+				for (final MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
 					ml.mouseClicked(e);
 				}
 			}
@@ -75,7 +67,7 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mouseReleased(final MouseEvent e) {
 
-				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+				for (final MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
 					ml.mouseReleased(e);
 				}
 			}
@@ -100,7 +92,8 @@ public class DayContentPanel extends JPanel {
 						event.setSelected(true);
 						if (event.isSelected()) {
 							events.addSelected(event);
-						} else {
+						}
+						else {
 							events.removeSelected(event);
 						}
 					}
@@ -112,27 +105,64 @@ public class DayContentPanel extends JPanel {
 				if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
 					calendar.getPopupMenu().show(DayContentPanel.this, e.getX(), e.getY());
 				}
-				for (MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+				for (final MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
 					ml.mousePressed(e);
 				}
 			}
 
 		});
 
-		addMouseMotionListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
+
 			@Override
-			public void mouseMoved(MouseEvent e) {
+			public void mousePressed(final MouseEvent e) {
+				startSelection = e.getPoint();
+				endSelection = e.getPoint();
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
+				final Date startDate = CalendarUtil.pixelToDate(owner.getDate(), (int) startSelection.getY(), getHeight());
+				final Date endDate = CalendarUtil.pixelToDate(owner.getDate(), (int) endSelection.getY(), getHeight());
+				EventRepository.get().triggerIntervalSelection(calendar, startDate, endDate);
+				startSelection = null;
+				endSelection = null;
+				calendar.validate();
+				calendar.repaint();
+
+			}
+		});
+
+		addMouseMotionListener(new MouseAdapter() {
+
+			@Override
+			public void mouseDragged(final MouseEvent e) {
+				endSelection = e.getPoint();
+				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
+				calendar.validate();
+				calendar.repaint();
+			}
+		});
+
+		addMouseMotionListener(new MouseAdapter() {
+
+			@Override
+			public void mouseMoved(final MouseEvent e) {
 				super.mouseMoved(e);
 
 				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
 				final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
 				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(e.getX(), e.getY())
 						: getNotMonthEvent(e.getX(), e.getY());
+
 				if (event != null) {
 					setToolTipText(calendar.getTooltipFormater().format(event));
-				} else {
+				}
+				else {
 					setToolTipText(null);
 				}
+
 			}
 		});
 	}
@@ -152,8 +182,18 @@ public class DayContentPanel extends JPanel {
 		drawBackground((Graphics2D) g);
 		if (owner.getOwner().getDisplayStrategy() != Type.MONTH) {
 			drawCalendarEvents((Graphics2D) g);
-		} else {
+		}
+		else {
 			drawCalendarEventsMonth((Graphics2D) g);
+		}
+
+		if (startSelection != null && endSelection != null) {
+			g.setColor(new Color(173, 216, 230, 50));
+			final int height = (int) (endSelection.getY() - startSelection.getY());
+			final int xStart = 0;
+			final int width = getWidth();
+			final int yStart = (int) (height > 0 ? startSelection.getY() : endSelection.getY());
+			g.fillRect(xStart, yStart, Math.abs(width), Math.abs(height));
 		}
 	}
 
@@ -175,7 +215,8 @@ public class DayContentPanel extends JPanel {
 				graphics2d.fillRect(0, 0, width, workingHoursRectHeight);
 				graphics2d.fillRect(0, workingHoursEndRectYStart, width, workingHoursEndHeight);
 			}
-		} else {
+		}
+		else {
 			if (isSelectedStrategyMonth) {
 				graphics2d.setColor(dayDisableBackgroundColor);
 				graphics2d.fillRect(0, 0, width, height);
@@ -240,9 +281,8 @@ public class DayContentPanel extends JPanel {
 				graphics2d.setFont(new Font("Verdana", Font.BOLD, 9));
 				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
 
-				GraphicsUtil.drawString(graphics2d, eventString, conflictIndex * (getWidth() - 4)
-						/ conflictingEventsSize + 3, eventStart + 11, (getWidth() - 4) / conflictingEventsSize - 3,
-						eventYEnd - eventStart);
+				GraphicsUtil.drawString(graphics2d, eventString, conflictIndex * (getWidth() - 4) / conflictingEventsSize
+						+ 3, eventStart + 11, (getWidth() - 4) / conflictingEventsSize - 3, eventYEnd - eventStart);
 
 			}
 		}
@@ -316,8 +356,8 @@ public class DayContentPanel extends JPanel {
 				graphics2d.setFont(font);
 
 				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
-				GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6,
-						pos + (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
+				GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6, pos + (13 / 2 + metrics.getHeight() / 2) - 2,
+						getWidth());
 
 				pos += 17;
 			}

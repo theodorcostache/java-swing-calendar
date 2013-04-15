@@ -15,16 +15,7 @@
  */
 package de.costache.calendar.util;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import de.costache.calendar.model.CalendarEvent;
 
@@ -143,38 +134,47 @@ public class CalendarUtil {
 	}
 
 	public static long getTotalSeconds(final Date date) {
-		Calendar c = CalendarUtil.getCalendar(date, false);
+		final Calendar c = CalendarUtil.getCalendar(date, false);
 		long seconds = c.get(Calendar.HOUR_OF_DAY) * 60 * 60;
 		seconds += c.get(Calendar.MINUTE) * 60;
 		seconds += c.get(Calendar.SECOND);
 		return seconds;
 	}
 
-	public static int secondsToPixels(final Date date, int maxHeight) {
-		long seconds = getTotalSeconds(date);
-		int pixel = Math.round(seconds * maxHeight / 86400.0f);
+	public static int secondsToPixels(final Date date, final int maxHeight) {
+		final long seconds = getTotalSeconds(date);
+		final int pixel = Math.round(seconds * maxHeight / 86400.0f);
 		return pixel;
 	}
 
-	public static Map<CalendarEvent, List<CalendarEvent>> getConflicting(Collection<CalendarEvent> calendarEvents) {
-		List<CalendarEvent> clonedCollection = new ArrayList<CalendarEvent>(calendarEvents);
+	public static Date pixelToDate(final Date day, final int posY, final int maxHeight) {
+		final long seconds = Math.round(posY * 86400.0f / maxHeight);
+		final Calendar c = CalendarUtil.getCalendar(day, false);
+		c.set(Calendar.HOUR_OF_DAY, (int) (seconds / 3600));
+		c.set(Calendar.MINUTE, (int) (seconds % 3600) / 60);
+		c.set(Calendar.SECOND, (int) (seconds % 3600) % 60);
+		return c.getTime();
+	}
 
-		Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = new HashMap<CalendarEvent, List<CalendarEvent>>();
+	public static Map<CalendarEvent, List<CalendarEvent>> getConflicting(final Collection<CalendarEvent> calendarEvents) {
+		final List<CalendarEvent> clonedCollection = new ArrayList<CalendarEvent>(calendarEvents);
+
+		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = new HashMap<CalendarEvent, List<CalendarEvent>>();
 
 		for (int i = 0; i < clonedCollection.size(); i++) {
-			CalendarEvent event1 = clonedCollection.get(i);
+			final CalendarEvent event1 = clonedCollection.get(i);
 			conflictingEvents.put(event1, new ArrayList<CalendarEvent>());
 			for (int j = 0; j < clonedCollection.size(); j++) {
-				CalendarEvent event2 = clonedCollection.get(j);
+				final CalendarEvent event2 = clonedCollection.get(j);
 				if (event2.isAllDay())
 					continue;
-				Date startA = event1.getStart();
-				Date endA = event1.getEnd();
-				Date startB = event2.getStart();
-				Date endB = event2.getEnd();
+				final Date startA = event1.getStart();
+				final Date endA = event1.getEnd();
+				final Date startB = event2.getStart();
+				final Date endB = event2.getEnd();
 
-				boolean isStartABeforeEndB = (startA.compareTo(endB)) < 0;
-				boolean isEndAAfterStartB = (endA.compareTo(startB)) > 0;
+				final boolean isStartABeforeEndB = (startA.compareTo(endB)) < 0;
+				final boolean isEndAAfterStartB = (endA.compareTo(startB)) > 0;
 
 				boolean isCurrentPairOverlap = false;
 
@@ -187,14 +187,14 @@ public class CalendarUtil {
 
 			Collections.sort(conflictingEvents.get(event1));
 		}
-		Set<CalendarEvent> keys = new HashSet<CalendarEvent>(conflictingEvents.keySet());
-		Map<CalendarEvent, List<CalendarEvent>> result = new HashMap<CalendarEvent, List<CalendarEvent>>();
+		final Set<CalendarEvent> keys = new HashSet<CalendarEvent>(conflictingEvents.keySet());
+		final Map<CalendarEvent, List<CalendarEvent>> result = new HashMap<CalendarEvent, List<CalendarEvent>>();
 
-		for (CalendarEvent event : keys) {
-			Set<CalendarEvent> visitedEvents = new HashSet<CalendarEvent>();
-			Set<CalendarEvent> tempSet = new HashSet<CalendarEvent>();
+		for (final CalendarEvent event : keys) {
+			final Set<CalendarEvent> visitedEvents = new HashSet<CalendarEvent>();
+			final Set<CalendarEvent> tempSet = new HashSet<CalendarEvent>();
 			copyAll(visitedEvents, tempSet, conflictingEvents, event);
-			List<CalendarEvent> newConflictingEventsList = new ArrayList<CalendarEvent>(tempSet);
+			final List<CalendarEvent> newConflictingEventsList = new ArrayList<CalendarEvent>(tempSet);
 			Collections.sort(newConflictingEventsList);
 			result.put(event, newConflictingEventsList);
 		}
@@ -202,10 +202,10 @@ public class CalendarUtil {
 		return result;
 	}
 
-	private static void copyAll(Set<CalendarEvent> visitedEvents, Set<CalendarEvent> tempSet,
-			Map<CalendarEvent, List<CalendarEvent>> conflictingEvents, CalendarEvent event) {
+	private static void copyAll(final Set<CalendarEvent> visitedEvents, final Set<CalendarEvent> tempSet,
+			final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents, final CalendarEvent event) {
 
-		for (CalendarEvent ce : conflictingEvents.get(event)) {
+		for (final CalendarEvent ce : conflictingEvents.get(event)) {
 
 			if (!visitedEvents.contains(ce)) {
 				visitedEvents.add(ce);

@@ -15,23 +15,12 @@
  */
 package de.costache.calendar.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.collections.MultiHashMap;
 
 import de.costache.calendar.JCalendar;
-import de.costache.calendar.events.ModelChangedEvent;
-import de.costache.calendar.events.ModelChangedListener;
-import de.costache.calendar.events.SelectionChangedEvent;
-import de.costache.calendar.events.SelectionChangedListener;
+import de.costache.calendar.events.*;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.model.CalendarEvent.Property;
 
@@ -55,7 +44,7 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 	/**
 	 * Creates a new instance of {@link IndexedEventCollection}
 	 */
-	public IndexedEventCollection(JCalendar parent) {
+	public IndexedEventCollection(final JCalendar parent) {
 		this.parent = parent;
 		this.indexedEvents = new MultiHashMap();
 		this.collectionChangedListeners = new ArrayList<ModelChangedListener>();
@@ -75,8 +64,8 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 		}
 		notifyObservers();
 
-		ModelChangedEvent event = new ModelChangedEvent(parent, calendarEvent);
-		for (ModelChangedListener listener : collectionChangedListeners) {
+		final ModelChangedEvent event = new ModelChangedEvent(parent, calendarEvent);
+		for (final ModelChangedListener listener : collectionChangedListeners) {
 			listener.eventAdded(event);
 		}
 	}
@@ -95,8 +84,8 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 
 		notifyObservers();
 
-		ModelChangedEvent event = new ModelChangedEvent(parent, calendarEvent);
-		for (ModelChangedListener listener : collectionChangedListeners) {
+		final ModelChangedEvent event = new ModelChangedEvent(parent, calendarEvent);
+		for (final ModelChangedListener listener : collectionChangedListeners) {
 			listener.eventRemoved(event);
 		}
 	}
@@ -104,18 +93,18 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 	@Override
 	public void addSelected(final CalendarEvent calendarEvent) {
 		selectedEvents.add(calendarEvent);
-		SelectionChangedEvent event = new SelectionChangedEvent(calendarEvent);
-		for (SelectionChangedListener listener : selectionChangedListeners) {
+		final SelectionChangedEvent event = new SelectionChangedEvent(calendarEvent);
+		for (final SelectionChangedListener listener : selectionChangedListeners) {
 			listener.selectionChanged(event);
 		}
 	}
 
 	@Override
 	public void removeSelected(final CalendarEvent calendarEvent) {
-		boolean remove = selectedEvents.remove(calendarEvent);
+		final boolean remove = selectedEvents.remove(calendarEvent);
 		if (remove) {
-			SelectionChangedEvent event = new SelectionChangedEvent(calendarEvent);
-			for (SelectionChangedListener listener : selectionChangedListeners) {
+			final SelectionChangedEvent event = new SelectionChangedEvent(calendarEvent);
+			for (final SelectionChangedListener listener : selectionChangedListeners) {
 				listener.selectionChanged(event);
 			}
 		}
@@ -123,8 +112,8 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 	}
 
 	@Override
-	public void clearSelected(CalendarEvent toIgnore, boolean notifyListeners) {
-		for (CalendarEvent event : selectedEvents) {
+	public void clearSelected(final CalendarEvent toIgnore, final boolean notifyListeners) {
+		for (final CalendarEvent event : selectedEvents) {
 			if (event != toIgnore) {
 				event.setSelected(false);
 			}
@@ -132,8 +121,8 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 		selectedEvents.clear();
 
 		if (notifyListeners) {
-			SelectionChangedEvent event = new SelectionChangedEvent(null);
-			for (SelectionChangedListener listener : selectionChangedListeners) {
+			final SelectionChangedEvent event = new SelectionChangedEvent(null);
+			for (final SelectionChangedListener listener : selectionChangedListeners) {
 				listener.selectionChanged(event);
 			}
 		}
@@ -163,50 +152,50 @@ class IndexedEventCollection extends Observable implements Observer, EventCollec
 			final CalendarEvent calendarEvent = (CalendarEvent) o;
 			final Property property = (Property) arg;
 			switch (property) {
-			case START:
-			case END:
+				case START:
+				case END:
 
-				for (final Object key : new HashSet<Object>(indexedEvents.keySet())) {
-					indexedEvents.remove(key, calendarEvent);
-				}
+					for (final Object key : new HashSet<Object>(indexedEvents.keySet())) {
+						indexedEvents.remove(key, calendarEvent);
+					}
 
-				final Collection<Date> dates = CalendarUtil.getDates(calendarEvent.getStart(), calendarEvent.getEnd());
-				for (final Date date : dates) {
-					indexedEvents.put(date, calendarEvent);
-				}
+					final Collection<Date> dates = CalendarUtil.getDates(calendarEvent.getStart(), calendarEvent.getEnd());
+					for (final Date date : dates) {
+						indexedEvents.put(date, calendarEvent);
+					}
 
-				notifyObservers(calendarEvent);
+					notifyObservers(calendarEvent);
 
-				ModelChangedEvent event = new ModelChangedEvent(parent, calendarEvent);
-				for (ModelChangedListener listener : collectionChangedListeners) {
-					listener.eventChanged(event);
-				}
+					final ModelChangedEvent event = new ModelChangedEvent(parent, calendarEvent);
+					for (final ModelChangedListener listener : collectionChangedListeners) {
+						listener.eventChanged(event);
+					}
 
-			default:
-				parent.invalidate();
-				parent.repaint();
-				break;
+				default:
+					parent.invalidate();
+					parent.repaint();
+					break;
 			}
 		}
 	}
 
 	@Override
-	public void addCollectionChangedListener(ModelChangedListener listener) {
+	public void addCollectionChangedListener(final ModelChangedListener listener) {
 		this.collectionChangedListeners.add(listener);
 	}
 
 	@Override
-	public void removeCollectionChangedListener(ModelChangedListener listener) {
+	public void removeCollectionChangedListener(final ModelChangedListener listener) {
 		this.collectionChangedListeners.remove(listener);
 	}
 
 	@Override
-	public void addSelectionChangedListener(SelectionChangedListener listener) {
+	public void addSelectionChangedListener(final SelectionChangedListener listener) {
 		this.selectionChangedListeners.add(listener);
 	}
 
 	@Override
-	public void removeSelectionChangedListener(SelectionChangedListener listener) {
+	public void removeSelectionChangedListener(final SelectionChangedListener listener) {
 		this.selectionChangedListeners.remove(listener);
 	}
 

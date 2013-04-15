@@ -15,16 +15,10 @@
  */
 package de.costache.calendar;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -32,20 +26,15 @@ import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections.collection.UnmodifiableCollection;
 
-import de.costache.calendar.events.IntervalChangedEvent;
-import de.costache.calendar.events.IntervalChangedListener;
-import de.costache.calendar.events.ModelChangedListener;
-import de.costache.calendar.events.SelectionChangedListener;
+import de.costache.calendar.events.*;
 import de.costache.calendar.format.CalendarEventFormat;
 import de.costache.calendar.format.DefaultCalendarEventFormat;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.ui.ContentPanel;
 import de.costache.calendar.ui.HeaderPanel;
-import de.costache.calendar.ui.strategy.DisplayStrategy;
+import de.costache.calendar.ui.strategy.*;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
-import de.costache.calendar.ui.strategy.DisplayStrategyFactory;
-import de.costache.calendar.util.CalendarUtil;
-import de.costache.calendar.util.EventCollectionRepository;
+import de.costache.calendar.util.*;
 
 /**
  * 
@@ -65,7 +54,7 @@ public class JCalendar extends JPanel {
 
 	private Config config;
 
-	private final List<IntervalChangedListener> listeners;
+	private final List<IntervalChangedListener> intervalChangedListener;
 
 	private JPopupMenu popupMenu;
 
@@ -77,7 +66,7 @@ public class JCalendar extends JPanel {
 	 * Creates a new instance of {@link JCalendar}
 	 */
 	public JCalendar() {
-		listeners = new ArrayList<IntervalChangedListener>();
+		intervalChangedListener = new ArrayList<IntervalChangedListener>();
 		config = new Config();
 		formater = new DefaultCalendarEventFormat();
 		selectedDay = Calendar.getInstance();
@@ -86,7 +75,6 @@ public class JCalendar extends JPanel {
 		bindListeners();
 
 		EventCollectionRepository.register(this);
-
 	}
 
 	private void initGui() {
@@ -133,10 +121,10 @@ public class JCalendar extends JPanel {
 				final DisplayStrategy strategy = contentPane.getStrategy();
 				strategy.moveIntervalLeft();
 				headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
-				final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
-						strategy.getIntervalStart(), strategy.getIntervalEnd());
+				final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(), strategy
+						.getIntervalStart(), strategy.getIntervalEnd());
 
-				for (final IntervalChangedListener listener : listeners) {
+				for (final IntervalChangedListener listener : intervalChangedListener) {
 					listener.intervalChanged(event);
 				}
 
@@ -149,10 +137,10 @@ public class JCalendar extends JPanel {
 				final DisplayStrategy strategy = contentPane.getStrategy();
 				strategy.moveIntervalRight();
 				headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
-				final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
-						strategy.getIntervalStart(), strategy.getIntervalEnd());
+				final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(), strategy
+						.getIntervalStart(), strategy.getIntervalEnd());
 
-				for (final IntervalChangedListener listener : listeners) {
+				for (final IntervalChangedListener listener : intervalChangedListener) {
 					listener.intervalChanged(event);
 				}
 			}
@@ -181,12 +169,11 @@ public class JCalendar extends JPanel {
 	 * Sets the display strategy
 	 * 
 	 * @param strategyType
-	 *            the {@link Type} of strategy to be used
+	 *           the {@link Type} of strategy to be used
 	 * @param displayDate
-	 *            if not null then this value will be used as a reference for
-	 *            calculating the interval start
+	 *           if not null then this value will be used as a reference for calculating the interval start
 	 */
-	public void setDisplayStrategy(Type strategyType, Date displayDate) {
+	public void setDisplayStrategy(final Type strategyType, final Date displayDate) {
 
 		final DisplayStrategy strategy = DisplayStrategyFactory.getStrategy(contentPane, strategyType);
 		contentPane.setStrategy(strategy);
@@ -210,7 +197,7 @@ public class JCalendar extends JPanel {
 	 * @param listener
 	 */
 	public void addIntervalChangedListener(final IntervalChangedListener listener) {
-		this.listeners.add(listener);
+		this.intervalChangedListener.add(listener);
 	}
 
 	/**
@@ -219,7 +206,7 @@ public class JCalendar extends JPanel {
 	 * @param listener
 	 */
 	public void removeIntervalChangedListener(final IntervalChangedListener listener) {
-		this.listeners.remove(listener);
+		this.intervalChangedListener.remove(listener);
 	}
 
 	/**
@@ -242,7 +229,7 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param selectionChangedListener
 	 */
-	public void addSelectionChangedListener(SelectionChangedListener selectionChangedListener) {
+	public void addSelectionChangedListener(final SelectionChangedListener selectionChangedListener) {
 		EventCollectionRepository.get(this).addSelectionChangedListener(selectionChangedListener);
 	}
 
@@ -250,15 +237,31 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param selectionChangedListener
 	 */
-	public void removeSelectionChangedListener(SelectionChangedListener selectionChangedListener) {
+	public void removeSelectionChangedListener(final SelectionChangedListener selectionChangedListener) {
 		EventCollectionRepository.get(this).removeSelectionChangedListener(selectionChangedListener);
+	}
+
+	/**
+	 * 
+	 * @param intervalSelectionListener
+	 */
+	public void addIntervalSelectionListener(final IntervalSelectionListener intervalSelectionListener) {
+		EventRepository.get().addIntervalSelectionListener(this, intervalSelectionListener);
+	}
+
+	/**
+	 * 
+	 * @param intervalSelectionListener
+	 */
+	public void removeIntervalSelectionListener(final IntervalSelectionListener intervalSelectionListener) {
+		EventRepository.get().removeIntervalSelectionListener(this, intervalSelectionListener);
 	}
 
 	/**
 	 * 
 	 * @param event
 	 */
-	public void addCalendarEvent(CalendarEvent event) {
+	public void addCalendarEvent(final CalendarEvent event) {
 		EventCollectionRepository.get(this).add(event);
 		validate();
 		repaint();
@@ -268,7 +271,7 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param event
 	 */
-	public void removeCalendarEvent(CalendarEvent event) {
+	public void removeCalendarEvent(final CalendarEvent event) {
 		EventCollectionRepository.get(this).remove(event);
 		validate();
 		repaint();
@@ -278,15 +281,15 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param date
 	 */
-	public void setSelectedDay(Date date) {
+	public void setSelectedDay(final Date date) {
 		selectedDay = CalendarUtil.getCalendar(date, true);
-		DisplayStrategy strategy = contentPane.getStrategy();
+		final DisplayStrategy strategy = contentPane.getStrategy();
 		strategy.setIntervalStart(date);
 		headerPane.getIntervalLabel().setText(strategy.getDisplayInterval());
 		final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
 				strategy.getIntervalStart(), strategy.getIntervalEnd());
 
-		for (final IntervalChangedListener listener : listeners) {
+		for (final IntervalChangedListener listener : intervalChangedListener) {
 			listener.intervalChanged(event);
 		}
 	}
@@ -303,7 +306,7 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param config
 	 */
-	public void setConfig(Config config) {
+	public void setConfig(final Config config) {
 		this.config = config;
 		validate();
 		repaint();
@@ -321,7 +324,7 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param popupMenu
 	 */
-	public void setJPopupMenu(JPopupMenu popupMenu) {
+	public void setJPopupMenu(final JPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
 	}
 
@@ -337,7 +340,7 @@ public class JCalendar extends JPanel {
 	 * 
 	 * @param formater
 	 */
-	public void setTooltipFormater(CalendarEventFormat formater) {
+	public void setTooltipFormater(final CalendarEventFormat formater) {
 		this.formater = formater;
 	}
 }
