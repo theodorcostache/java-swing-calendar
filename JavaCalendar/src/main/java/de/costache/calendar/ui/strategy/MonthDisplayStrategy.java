@@ -53,7 +53,8 @@ class MonthDisplayStrategy implements DisplayStrategy {
 	@Override
 	public void init() {
 		if (start == null)
-			start = CalendarUtil.getCalendar(parent.getOwner().getSelectedDay(), true);
+			start = CalendarUtil.getCalendar(
+					parent.getOwner().getSelectedDay(), true);
 		start.set(Calendar.DAY_OF_MONTH, 1);
 
 		displayPanel = new JPanel(true);
@@ -83,8 +84,9 @@ class MonthDisplayStrategy implements DisplayStrategy {
 	@Override
 	public void moveIntervalLeft() {
 		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInMonths(currentDay, -1));
-		start.add(Calendar.MONTH, -1);
+		parent.getOwner().setSelectedDay(
+				CalendarUtil.createInMonths(currentDay, -1));
+		start.setTime(CalendarUtil.createInMonths(currentDay, -1));
 		start.set(Calendar.DAY_OF_MONTH, 1);
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		final int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
@@ -102,8 +104,9 @@ class MonthDisplayStrategy implements DisplayStrategy {
 	@Override
 	public void moveIntervalRight() {
 		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInMonths(currentDay, 1));
-		start.add(Calendar.MONTH, 1);
+		parent.getOwner().setSelectedDay(
+				CalendarUtil.createInMonths(currentDay, 1));
+		start.setTime(CalendarUtil.createInMonths(currentDay, 1));
 		start.set(Calendar.DAY_OF_MONTH, 1);
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		final int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);

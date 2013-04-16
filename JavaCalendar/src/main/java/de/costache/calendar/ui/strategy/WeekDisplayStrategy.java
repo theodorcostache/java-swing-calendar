@@ -152,8 +152,9 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	@Override
 	public void moveIntervalLeft() {
 		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInWeeks(currentDay, -7));
-		start.add(Calendar.DATE, -7);
+		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, -7));
+		start.setTime(CalendarUtil.createInDays(currentDay, -7));
+		start.set(Calendar.DAY_OF_WEEK, 1);
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		for (int i = 0; i < 7; i++) {
 			days[i].setDate(c.getTime());
@@ -168,7 +169,8 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	public void moveIntervalRight() {
 		Date currentDay = parent.getOwner().getSelectedDay();
 		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, 7));
-		start.add(Calendar.DATE, 7);
+		start.setTime(CalendarUtil.createInDays(currentDay, 7));
+		start.set(Calendar.DAY_OF_WEEK, 1);
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		for (int i = 0; i < 7; i++) {
 			days[i].setDate(c.getTime());

@@ -133,7 +133,7 @@ class DayDisplayStrategy implements DisplayStrategy {
 	public void moveIntervalLeft() {
 		Date currentDay = parent.getOwner().getSelectedDay();
 		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, -1));
-		start.add(Calendar.DATE, -1);
+		start.setTime(CalendarUtil.createInDays(currentDay,-1));
 		day.setDate(start.getTime());
 		parent.validate();
 		parent.repaint();
@@ -143,7 +143,7 @@ class DayDisplayStrategy implements DisplayStrategy {
 	public void moveIntervalRight() {
 		Date currentDay = parent.getOwner().getSelectedDay();
 		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, 1));
-		start.add(Calendar.DATE, 1);
+		start.setTime(CalendarUtil.createInDays(currentDay, 1));
 		day.setDate(start.getTime());
 		parent.validate();
 		parent.repaint();
