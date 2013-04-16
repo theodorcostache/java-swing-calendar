@@ -307,7 +307,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 	public static void main(final String[] args) throws MalformedObjectNameException, NullPointerException,
 			InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-		Locale.setDefault(Locale.CHINESE);
+		Locale.setDefault(Locale.ENGLISH);
 		final JCalendarFrameDemo frameTest = new JCalendarFrameDemo();
 		frameTest.setVisible(true);
 	}
