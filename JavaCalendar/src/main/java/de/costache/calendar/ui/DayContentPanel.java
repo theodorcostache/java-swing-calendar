@@ -59,7 +59,8 @@ public class DayContentPanel extends JPanel {
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
-				for (final MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+				for (final MouseListener ml : DayContentPanel.this.owner
+						.getOwner().getMouseListeners()) {
 					ml.mouseClicked(e);
 				}
 			}
@@ -67,7 +68,8 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mouseReleased(final MouseEvent e) {
 
-				for (final MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+				for (final MouseListener ml : DayContentPanel.this.owner
+						.getOwner().getMouseListeners()) {
 					ml.mouseReleased(e);
 				}
 			}
@@ -75,15 +77,19 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mousePressed(final MouseEvent e) {
 
-				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
+				final JCalendar calendar = DayContentPanel.this.owner
+						.getOwner();
 
-				final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
-				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(e.getX(), e.getY())
-						: getNotMonthEvent(e.getX(), e.getY());
+				final boolean isSelectedStrategyMonth = calendar
+						.getDisplayStrategy() == Type.MONTH;
+				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(
+						e.getX(), e.getY()) : getNotMonthEvent(e.getX(),
+						e.getY());
 
 				if (e.getClickCount() == 1) {
 
-					final EventCollection events = EventCollectionRepository.get(calendar);
+					final EventCollection events = EventCollectionRepository
+							.get(calendar);
 
 					if (!e.isControlDown()) {
 						events.clearSelected(event, true);
@@ -92,8 +98,7 @@ public class DayContentPanel extends JPanel {
 						event.setSelected(true);
 						if (event.isSelected()) {
 							events.addSelected(event);
-						}
-						else {
+						} else {
 							events.removeSelected(event);
 						}
 					}
@@ -103,9 +108,11 @@ public class DayContentPanel extends JPanel {
 
 				}
 				if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
-					calendar.getPopupMenu().show(DayContentPanel.this, e.getX(), e.getY());
+					calendar.getPopupMenu().show(DayContentPanel.this,
+							e.getX(), e.getY());
 				}
-				for (final MouseListener ml : DayContentPanel.this.owner.getOwner().getMouseListeners()) {
+				for (final MouseListener ml : DayContentPanel.this.owner
+						.getOwner().getMouseListeners()) {
 					ml.mousePressed(e);
 				}
 			}
@@ -122,10 +129,15 @@ public class DayContentPanel extends JPanel {
 
 			@Override
 			public void mouseReleased(final MouseEvent e) {
-				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
-				final Date startDate = CalendarUtil.pixelToDate(owner.getDate(), (int) startSelection.getY(), getHeight());
-				final Date endDate = CalendarUtil.pixelToDate(owner.getDate(), (int) endSelection.getY(), getHeight());
-				EventRepository.get().triggerIntervalSelection(calendar, startDate, endDate);
+				final JCalendar calendar = DayContentPanel.this.owner
+						.getOwner();
+				final Date startDate = CalendarUtil.pixelToDate(
+						owner.getDate(), (int) startSelection.getY(),
+						getHeight());
+				final Date endDate = CalendarUtil.pixelToDate(owner.getDate(),
+						(int) endSelection.getY(), getHeight());
+				EventRepository.get().triggerIntervalSelection(calendar,
+						startDate, endDate);
 				startSelection = null;
 				endSelection = null;
 				calendar.validate();
@@ -139,7 +151,8 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mouseDragged(final MouseEvent e) {
 				endSelection = e.getPoint();
-				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
+				final JCalendar calendar = DayContentPanel.this.owner
+						.getOwner();
 				calendar.validate();
 				calendar.repaint();
 			}
@@ -151,15 +164,17 @@ public class DayContentPanel extends JPanel {
 			public void mouseMoved(final MouseEvent e) {
 				super.mouseMoved(e);
 
-				final JCalendar calendar = DayContentPanel.this.owner.getOwner();
-				final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
-				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(e.getX(), e.getY())
-						: getNotMonthEvent(e.getX(), e.getY());
+				final JCalendar calendar = DayContentPanel.this.owner
+						.getOwner();
+				final boolean isSelectedStrategyMonth = calendar
+						.getDisplayStrategy() == Type.MONTH;
+				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(
+						e.getX(), e.getY()) : getNotMonthEvent(e.getX(),
+						e.getY());
 
 				if (event != null) {
 					setToolTipText(calendar.getTooltipFormater().format(event));
-				}
-				else {
+				} else {
 					setToolTipText(null);
 				}
 
@@ -182,17 +197,18 @@ public class DayContentPanel extends JPanel {
 		drawBackground((Graphics2D) g);
 		if (owner.getOwner().getDisplayStrategy() != Type.MONTH) {
 			drawCalendarEvents((Graphics2D) g);
-		}
-		else {
+		} else {
 			drawCalendarEventsMonth((Graphics2D) g);
 		}
 
 		if (startSelection != null && endSelection != null) {
 			g.setColor(new Color(173, 216, 230, 50));
-			final int height = (int) (endSelection.getY() - startSelection.getY());
+			final int height = (int) (endSelection.getY() - startSelection
+					.getY());
 			final int xStart = 0;
 			final int width = getWidth();
-			final int yStart = (int) (height > 0 ? startSelection.getY() : endSelection.getY());
+			final int yStart = (int) (height > 0 ? startSelection.getY()
+					: endSelection.getY());
 			g.fillRect(xStart, yStart, Math.abs(width), Math.abs(height));
 		}
 	}
@@ -202,21 +218,29 @@ public class DayContentPanel extends JPanel {
 		final int width = getWidth();
 		final JCalendar calendar = owner.getOwner();
 		final Config config = calendar.getConfig();
-		final Color outsideWorkingHoursColor = config.getOutsideWorkingHoursColor();
-		final Color dayDisableBackgroundColor = config.getDayDisabledBackgroundColor();
+		final Color outsideWorkingHoursColor = config
+				.getOutsideWorkingHoursColor();
+		final Color dayDisableBackgroundColor = config
+				.getDayDisabledBackgroundColor();
 		final int workingHoursRectHeight = config.getWorkingHoursStart() * 60;
 		final int workingHoursEndRectYStart = config.getWorkingHoursEnd() * 60;
-		final int workingHoursEndHeight = height - config.getWorkingHoursEnd() * 60;
+		final int workingHoursEndHeight = height - config.getWorkingHoursEnd()
+				* 60;
 		final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
 
 		if (isEnabled()) {
 			if (!isSelectedStrategyMonth) {
-				graphics2d.setColor(outsideWorkingHoursColor);
-				graphics2d.fillRect(0, 0, width, workingHoursRectHeight);
-				graphics2d.fillRect(0, workingHoursEndRectYStart, width, workingHoursEndHeight);
+				if (!calendar.getConfig().isHoliday(owner.getDate())) {
+					graphics2d.setColor(outsideWorkingHoursColor);
+					graphics2d.fillRect(0, 0, width, workingHoursRectHeight);
+					graphics2d.fillRect(0, workingHoursEndRectYStart, width,
+							workingHoursEndHeight);
+				} else {
+					graphics2d.setColor(calendar.getConfig().getHolidayBgColor());
+					graphics2d.fillRect(0, 0, width, height);
+				}
 			}
-		}
-		else {
+		} else {
 			if (isSelectedStrategyMonth) {
 				graphics2d.setColor(dayDisableBackgroundColor);
 				graphics2d.fillRect(0, 0, width, height);
@@ -242,10 +266,13 @@ public class DayContentPanel extends JPanel {
 
 	private void drawCalendarEvents(final Graphics2D graphics2d) {
 
-		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
-		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository
+				.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection
+				.getEvents(owner.getDate());
 
-		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = CalendarUtil.getConflicting(events);
+		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = CalendarUtil
+				.getConflicting(events);
 
 		final Config config = owner.getOwner().getConfig();
 		if (events.size() > 0) {
@@ -253,36 +280,50 @@ public class DayContentPanel extends JPanel {
 				if (event.isAllDay())
 					continue;
 				Color bgColor = event.getType().getBackgroundColor();
-				bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
+				bgColor = bgColor == null ? config
+						.getEventDefaultBackgroundColor() : bgColor;
 				Color fgColor = event.getType().getForegroundColor();
-				fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
+				fgColor = fgColor == null ? config
+						.getEventDefaultForegroundColor() : fgColor;
 
-				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
+				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor
+						.darker().darker());
 				int eventStart = 0;
 
-				final boolean isSameStartDay = CalendarUtil.isSameDay(event.getStart(), owner.getDate());
+				final boolean isSameStartDay = CalendarUtil.isSameDay(
+						event.getStart(), owner.getDate());
 				if (isSameStartDay) {
-					eventStart = CalendarUtil.secondsToPixels(event.getStart(), getHeight());
+					eventStart = CalendarUtil.secondsToPixels(event.getStart(),
+							getHeight());
 				}
 
 				int eventYEnd = getHeight();
 				if (CalendarUtil.isSameDay(event.getEnd(), owner.getDate())) {
-					eventYEnd = CalendarUtil.secondsToPixels(event.getEnd(), getHeight());
+					eventYEnd = CalendarUtil.secondsToPixels(event.getEnd(),
+							getHeight());
 				}
 
-				final int conflictIndex = conflictingEvents.get(event).indexOf(event);
-				final int conflictingEventsSize = conflictingEvents.get(event).size();
+				final int conflictIndex = conflictingEvents.get(event).indexOf(
+						event);
+				final int conflictingEventsSize = conflictingEvents.get(event)
+						.size();
 
-				graphics2d.fillRoundRect(conflictIndex * (getWidth() - 4) / conflictingEventsSize, eventStart,
-						(getWidth() - 4) / conflictingEventsSize - 2, eventYEnd - eventStart, 12, 12);
-				final String eventString = sdf.format(event.getStart()) + " " + sdf.format(event.getEnd()) + " "
-						+ event.getSummary();
+				graphics2d.fillRoundRect(conflictIndex * (getWidth() - 4)
+						/ conflictingEventsSize, eventStart, (getWidth() - 4)
+						/ conflictingEventsSize - 2, eventYEnd - eventStart,
+						12, 12);
+				final String eventString = sdf.format(event.getStart()) + " "
+						+ sdf.format(event.getEnd()) + " " + event.getSummary();
 
 				graphics2d.setFont(new Font("Verdana", Font.BOLD, 9));
-				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
+				graphics2d
+						.setColor(!event.isSelected() ? fgColor : Color.white);
 
-				GraphicsUtil.drawString(graphics2d, eventString, conflictIndex * (getWidth() - 4) / conflictingEventsSize
-						+ 3, eventStart + 11, (getWidth() - 4) / conflictingEventsSize - 3, eventYEnd - eventStart);
+				GraphicsUtil.drawString(graphics2d, eventString, conflictIndex
+						* (getWidth() - 4) / conflictingEventsSize + 3,
+						eventStart + 11, (getWidth() - 4)
+								/ conflictingEventsSize - 3, eventYEnd
+								- eventStart);
 
 			}
 		}
@@ -290,10 +331,13 @@ public class DayContentPanel extends JPanel {
 
 	private CalendarEvent getNotMonthEvent(final int x, final int y) {
 
-		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
-		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository
+				.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection
+				.getEvents(owner.getDate());
 
-		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = CalendarUtil.getConflicting(events);
+		final Map<CalendarEvent, List<CalendarEvent>> conflictingEvents = CalendarUtil
+				.getConflicting(events);
 
 		if (events.size() > 0) {
 			for (final CalendarEvent event : events) {
@@ -301,27 +345,35 @@ public class DayContentPanel extends JPanel {
 					continue;
 
 				int eventYStart = 0;
-				final boolean isSameStartDay = CalendarUtil.isSameDay(event.getStart(), owner.getDate());
+				final boolean isSameStartDay = CalendarUtil.isSameDay(
+						event.getStart(), owner.getDate());
 				if (isSameStartDay) {
-					eventYStart = CalendarUtil.secondsToPixels(event.getStart(), getHeight());
+					eventYStart = CalendarUtil.secondsToPixels(
+							event.getStart(), getHeight());
 				}
 
 				int eventYEnd = getHeight();
 				if (CalendarUtil.isSameDay(event.getEnd(), owner.getDate())) {
-					eventYEnd = CalendarUtil.secondsToPixels(event.getEnd(), getHeight());
+					eventYEnd = CalendarUtil.secondsToPixels(event.getEnd(),
+							getHeight());
 				}
 
-				final int conflictIndex = conflictingEvents.get(event).indexOf(event);
-				final int conflictingEventsSize = conflictingEvents.get(event).size();
+				final int conflictIndex = conflictingEvents.get(event).indexOf(
+						event);
+				final int conflictingEventsSize = conflictingEvents.get(event)
+						.size();
 
-				final int rectXStart = conflictIndex * (getWidth() - 4) / conflictingEventsSize;
+				final int rectXStart = conflictIndex * (getWidth() - 4)
+						/ conflictingEventsSize;
 				final int rectYStart = eventYStart;
 
-				final int rectWidth = (getWidth() - 4) / conflictingEventsSize - 2;
+				final int rectWidth = (getWidth() - 4) / conflictingEventsSize
+						- 2;
 
 				final int rectHeight = eventYEnd - eventYStart;
 
-				final Rectangle r = new Rectangle(rectXStart, rectYStart, rectWidth, rectHeight);
+				final Rectangle r = new Rectangle(rectXStart, rectYStart,
+						rectWidth, rectHeight);
 				if (r.contains(x, y)) {
 					return event;
 				}
@@ -332,22 +384,27 @@ public class DayContentPanel extends JPanel {
 
 	private void drawCalendarEventsMonth(final Graphics2D graphics2d) {
 
-		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
-		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository
+				.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection
+				.getEvents(owner.getDate());
 		int pos = 2;
 		if (events.size() > 0) {
 			final Config config = owner.getOwner().getConfig();
 			for (final CalendarEvent event : events) {
 
 				Color bgColor = event.getType().getBackgroundColor();
-				bgColor = bgColor == null ? config.getEventDefaultBackgroundColor() : bgColor;
+				bgColor = bgColor == null ? config
+						.getEventDefaultBackgroundColor() : bgColor;
 				Color fgColor = event.getType().getForegroundColor();
-				fgColor = fgColor == null ? config.getEventDefaultForegroundColor() : fgColor;
-				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor.darker().darker());
+				fgColor = fgColor == null ? config
+						.getEventDefaultForegroundColor() : fgColor;
+				graphics2d.setColor(!event.isSelected() ? bgColor : bgColor
+						.darker().darker());
 				graphics2d.fillRect(2, pos, getWidth() - 4, 15);
 
-				final String eventString = sdf.format(event.getStart()) + " " + sdf.format(event.getEnd()) + " "
-						+ event.getSummary();
+				final String eventString = sdf.format(event.getStart()) + " "
+						+ sdf.format(event.getEnd()) + " " + event.getSummary();
 				int fontSize = Math.round(getHeight() * 0.5f);
 				fontSize = fontSize > 9 ? 9 : fontSize;
 
@@ -355,9 +412,10 @@ public class DayContentPanel extends JPanel {
 				final FontMetrics metrics = graphics2d.getFontMetrics(font);
 				graphics2d.setFont(font);
 
-				graphics2d.setColor(!event.isSelected() ? fgColor : Color.white);
-				GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6, pos + (13 / 2 + metrics.getHeight() / 2) - 2,
-						getWidth());
+				graphics2d
+						.setColor(!event.isSelected() ? fgColor : Color.white);
+				GraphicsUtil.drawTrimmedString(graphics2d, eventString, 6, pos
+						+ (13 / 2 + metrics.getHeight() / 2) - 2, getWidth());
 
 				pos += 17;
 			}
@@ -366,8 +424,10 @@ public class DayContentPanel extends JPanel {
 
 	private CalendarEvent getEventForMonth(final int x, final int y) {
 
-		final EventCollection eventsCollection = EventCollectionRepository.get(owner.getOwner());
-		final Collection<CalendarEvent> events = eventsCollection.getEvents(owner.getDate());
+		final EventCollection eventsCollection = EventCollectionRepository
+				.get(owner.getOwner());
+		final Collection<CalendarEvent> events = eventsCollection
+				.getEvents(owner.getDate());
 
 		int pos = 2;
 		if (events.size() > 0) {
@@ -380,7 +440,8 @@ public class DayContentPanel extends JPanel {
 
 				final int rectHeight = 15;
 
-				final Rectangle r = new Rectangle(rectXStart, rectYStart, rectWidth, rectHeight);
+				final Rectangle r = new Rectangle(rectXStart, rectYStart,
+						rectWidth, rectHeight);
 				if (r.contains(x, y)) {
 					return event;
 				}
