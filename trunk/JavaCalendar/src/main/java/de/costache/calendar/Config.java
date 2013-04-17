@@ -16,6 +16,11 @@
 package de.costache.calendar;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import de.costache.calendar.util.CalendarUtil;
 
 /**
  * 
@@ -48,6 +53,12 @@ public class Config {
 
 	private Color dayDisabledBackgroundColor;
 
+	private boolean allDayPanelVisible;
+
+	private List<Date> holidays;
+
+	private Color holidayBgColor;
+
 	public Config() {
 		lineColor = new Color(220, 220, 220);
 		middleLineColor = new Color(240, 240, 240);
@@ -66,6 +77,11 @@ public class Config {
 
 		outsideWorkingHoursColor = new Color(148, 197, 217, 40);
 		dayDisabledBackgroundColor = new Color(148, 197, 217, 128);
+
+		allDayPanelVisible = true;
+
+		holidayBgColor = new Color(220,220,220);
+		holidays = new ArrayList<Date>();
 	}
 
 	public Color getLineColor() {
@@ -164,4 +180,35 @@ public class Config {
 		this.dayDisabledBackgroundColor = dayDisabledBackgroundColor;
 	}
 
+	public boolean isAllDayPanelVisible() {
+		return allDayPanelVisible;
+	}
+
+	public void setAllDayPanelVisible(boolean allDayPanelVisible) {
+		this.allDayPanelVisible = allDayPanelVisible;
+	}
+
+	public List<Date> getHolidays() {
+		return holidays;
+	}
+
+	public void setHolidays(List<Date> holidays) {
+		this.holidays.clear();
+		for (Date date : holidays) {
+
+			this.holidays.add(CalendarUtil.stripTime(date));
+		}
+	}
+
+	public boolean isHoliday(Date date) {
+		return holidays.contains(CalendarUtil.stripTime(date));
+	}
+
+	public Color getHolidayBgColor() {
+		return holidayBgColor;
+	}
+
+	public void setHolidayBgColor(Color holidayBgColor) {
+		this.holidayBgColor = holidayBgColor;
+	}
 }

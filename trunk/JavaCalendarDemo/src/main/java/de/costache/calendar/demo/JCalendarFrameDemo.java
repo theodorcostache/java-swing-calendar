@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
@@ -126,6 +127,8 @@ public class JCalendarFrameDemo extends JFrame {
 		jCalendar = new JCalendar();
 		jCalendar.setPreferredSize(new Dimension(1024, 768));
 		jCalendar.setJPopupMenu(popup);
+		jCalendar.getConfig().setAllDayPanelVisible(false);
+		jCalendar.getConfig().setHolidays(Arrays.asList(new Date()));
 
 		content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		content.add(jCalendar);
@@ -307,7 +310,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 	public static void main(final String[] args) throws MalformedObjectNameException, NullPointerException,
 			InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-		Locale.setDefault(Locale.ENGLISH);
+		Locale.setDefault(Locale.CHINESE);
 		final JCalendarFrameDemo frameTest = new JCalendarFrameDemo();
 		frameTest.setVisible(true);
 	}
