@@ -55,6 +55,10 @@ public class DayContentPanel extends JPanel {
 		super(true);
 		setOpaque(false);
 		this.owner = owner;
+		addListeners();
+	}
+
+	private void addListeners() {
 
 		this.addMouseListener(new MouseAdapter() {
 			@Override
@@ -136,13 +140,32 @@ public class DayContentPanel extends JPanel {
 						getHeight());
 				final Date endDate = CalendarUtil.pixelToDate(owner.getDate(),
 						(int) endSelection.getY(), getHeight());
-				EventRepository.get().triggerIntervalSelection(calendar,
-						startDate, endDate);
+				if (!startDate.equals(endDate)) {
+					EventRepository.get().triggerIntervalSelection(calendar,
+							startDate, endDate);
+				}
 				startSelection = null;
 				endSelection = null;
 				calendar.validate();
 				calendar.repaint();
+			}
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					final JCalendar calendar = DayContentPanel.this.owner
+							.getOwner();
+					final Date startDate = CalendarUtil.pixelToDate(
+							owner.getDate(), (int) e.getY(), getHeight());
+
+					EventRepository.get().triggerIntervalSelection(calendar,
+							startDate, startDate);
+
+					startSelection = null;
+					endSelection = null;
+					calendar.validate();
+					calendar.repaint();
+				}
 			}
 		});
 

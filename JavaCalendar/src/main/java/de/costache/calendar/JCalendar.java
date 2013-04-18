@@ -155,6 +155,22 @@ public class JCalendar extends JPanel {
 	public Date getSelectedDay() {
 		return selectedDay.getTime();
 	}
+	
+	/**
+	 * Returns the interval start date
+	 * @return
+	 */
+	public Date intervalStart(){
+		return contentPane.getStrategy().getIntervalStart();
+	}
+	
+	/**
+	 * Returns the interval end date
+	 * @return
+	 */
+	public Date intervalEnd(){
+		return contentPane.getStrategy().getIntervalEnd();
+	}
 
 	/**
 	 * Gets the current display strategy.

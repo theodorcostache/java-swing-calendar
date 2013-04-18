@@ -38,6 +38,8 @@ import javax.swing.event.PopupMenuListener;
 import de.costache.calendar.JCalendar;
 import de.costache.calendar.events.IntervalChangedEvent;
 import de.costache.calendar.events.IntervalChangedListener;
+import de.costache.calendar.events.IntervalSelectionEvent;
+import de.costache.calendar.events.IntervalSelectionListener;
 import de.costache.calendar.events.ModelChangedEvent;
 import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.SelectionChangedEvent;
@@ -278,12 +280,13 @@ public class JCalendarFrameDemo extends JFrame {
 						+ sdf.format(event.getIntervalEnd()) + "\n");
 			}
 		});
-
-		jCalendar.addMouseListener(new MouseAdapter() {
+		
+		jCalendar.addIntervalSelectionListener(new IntervalSelectionListener() {
+			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				description.append("Mouse clicked " + e.toString() + "\n");
+			public void intervalSelected(IntervalSelectionEvent event) {
+				description.append("Interval selection changed " + sdf.format(event.getIntervalStart()) + " "
+						+ sdf.format(event.getIntervalEnd()) + "\n");
 			}
 		});
 
