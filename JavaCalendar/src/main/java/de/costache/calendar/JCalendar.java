@@ -148,7 +148,7 @@ public class JCalendar extends JPanel {
 	 * Returns the interval start date
 	 * @return
 	 */
-	public Date intervalStart(){
+	public Date getIntervalStart(){
 		return contentPane.getStrategy().getIntervalStart();
 	}
 	
@@ -156,7 +156,7 @@ public class JCalendar extends JPanel {
 	 * Returns the interval end date
 	 * @return
 	 */
-	public Date intervalEnd(){
+	public Date getIntervalEnd(){
 		return contentPane.getStrategy().getIntervalEnd();
 	}
 
