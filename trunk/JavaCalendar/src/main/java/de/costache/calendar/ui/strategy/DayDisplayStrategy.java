@@ -33,6 +33,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import de.costache.calendar.JCalendar;
 import de.costache.calendar.ui.ContentPanel;
 import de.costache.calendar.ui.DayPanel;
 import de.costache.calendar.ui.HoursPanel;
@@ -45,14 +46,15 @@ import de.costache.calendar.util.CalendarUtil;
  */
 class DayDisplayStrategy implements DisplayStrategy {
 
-	private Calendar start;
 	private final ContentPanel parent;
+    private final JCalendar calendar;
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 	private DayPanel day;
 	private JPanel displayPanel;
 
 	public DayDisplayStrategy(final ContentPanel parent) {
 		this.parent = parent;
+        this.calendar = parent.getOwner();
 		init();
 	}
 
@@ -62,8 +64,12 @@ class DayDisplayStrategy implements DisplayStrategy {
 		UIDefaults uidef = UIManager.getDefaults();
 		int swidth = Integer.parseInt(uidef.get("ScrollBar.width").toString());
 
-		if (start == null)
-			start = CalendarUtil.getCalendar(parent.getOwner().getSelectedDay(), true);
+		Calendar start = CalendarUtil.getCalendar(new Date(), true);
+        Calendar end = CalendarUtil.getCalendar(new Date(), true);
+        end.add(Calendar.DATE,1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
 
 		JPanel contentsPanel = new JPanel(true);
 		contentsPanel.setLayout(new GridBagLayout());
@@ -131,9 +137,14 @@ class DayDisplayStrategy implements DisplayStrategy {
 
 	@Override
 	public void moveIntervalLeft() {
-		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, -1));
-		start.setTime(CalendarUtil.createInDays(currentDay,-1));
+        Calendar start = calendar.getConfig().getIntervalStart();
+        start.add(Calendar.DATE,-1);
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
 		day.setDate(start.getTime());
 		parent.validate();
 		parent.repaint();
@@ -141,25 +152,36 @@ class DayDisplayStrategy implements DisplayStrategy {
 
 	@Override
 	public void moveIntervalRight() {
-		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, 1));
-		start.setTime(CalendarUtil.createInDays(currentDay, 1));
-		day.setDate(start.getTime());
-		parent.validate();
-		parent.repaint();
+        Calendar start = calendar.getConfig().getIntervalStart();
+        start.add(Calendar.DATE,1);
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
+        day.setDate(start.getTime());
+        parent.validate();
+        parent.repaint();
 	}
 
 	@Override
 	public void setIntervalStart(Date date) {
-		start = CalendarUtil.getCalendar(date, true);
-		day.setDate(start.getTime());
-		parent.validate();
-		parent.repaint();
+        Calendar start = calendar.getConfig().getIntervalStart();
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
+        day.setDate(start.getTime());
+        parent.validate();
+        parent.repaint();
 	}
 
 	@Override
 	public String getDisplayInterval() {
-		return sdf.format(start.getTime());
+		return sdf.format(calendar.getConfig().getIntervalStart().getTime());
 	}
 
 	/*
@@ -170,29 +192,6 @@ class DayDisplayStrategy implements DisplayStrategy {
 	@Override
 	public Type getType() {
 		return Type.DAY;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.mediamarkt.calendar.strategy.DisplayStrategy#getIntervalStart()
-	 */
-	@Override
-	public Date getIntervalStart() {
-		return start.getTime();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.mediamarkt.calendar.strategy.DisplayStrategy#getIntervalEnd()
-	 */
-	@Override
-	public Date getIntervalEnd() {
-		final Calendar c = CalendarUtil.copyCalendar(start, true);
-		c.add(Calendar.DATE, 1);
-		c.add(Calendar.SECOND, -1);
-		return c.getTime();
 	}
 
 }

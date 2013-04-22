@@ -143,22 +143,6 @@ public class JCalendar extends JPanel {
 	public Date getSelectedDay() {
 		return selectedDay.getTime();
 	}
-	
-	/**
-	 * Returns the interval start date
-	 * @return
-	 */
-	public Date getIntervalStart(){
-		return contentPane.getStrategy().getIntervalStart();
-	}
-	
-	/**
-	 * Returns the interval end date
-	 * @return
-	 */
-	public Date getIntervalEnd(){
-		return contentPane.getStrategy().getIntervalEnd();
-	}
 
 	/**
 	 * Gets the current display strategy.
@@ -282,16 +266,16 @@ public class JCalendar extends JPanel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param date
 	 */
-	public void setSelectedDay(final Date date) {
+	 public void setSelectedDay(final Date date) {
 		selectedDay = CalendarUtil.getCalendar(date, true);
 		final DisplayStrategy strategy = contentPane.getStrategy();
 		strategy.setIntervalStart(date);
 		headerPane.getIntervalLabel().setText(strategy.getDisplayInterval());
 		final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
-				strategy.getIntervalStart(), strategy.getIntervalEnd());
+				config.getIntervalStart().getTime(), config.getIntervalEnd().getTime());
 
 		for (final IntervalChangedListener listener : intervalChangedListener) {
 			listener.intervalChanged(event);

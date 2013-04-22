@@ -40,9 +40,5 @@ public interface DisplayStrategy {
 
 	public String getDisplayInterval();
 
-	public Date getIntervalStart();
-
-	public Date getIntervalEnd();
-
 	void setIntervalStart(Date date);
 }

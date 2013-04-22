@@ -17,6 +17,7 @@ package de.costache.calendar;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +59,10 @@ public class Config {
 	private List<Date> holidays;
 
 	private Color holidayBgColor;
+
+    private Calendar intervalStart;
+
+    private Calendar intervalEnd;
 
 	public Config() {
 		lineColor = new Color(220, 220, 220);
@@ -211,4 +216,20 @@ public class Config {
 	public void setHolidayBgColor(Color holidayBgColor) {
 		this.holidayBgColor = holidayBgColor;
 	}
+
+    public Calendar getIntervalStart(){
+        return intervalStart;
+    }
+
+    public void setIntervalStart(Calendar intervalStart) {
+        this.intervalStart = intervalStart;
+    }
+
+    public Calendar getIntervalEnd() {
+        return intervalEnd;
+    }
+
+    public void setIntervalEnd(Calendar intervalEnd) {
+        this.intervalEnd = intervalEnd;
+    }
 }
