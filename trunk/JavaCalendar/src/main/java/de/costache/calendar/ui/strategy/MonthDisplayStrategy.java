@@ -148,8 +148,7 @@ class MonthDisplayStrategy implements DisplayStrategy {
     public void setIntervalStart(Date date) {
         Calendar start = CalendarUtil.getCalendar(date, true);
         start.set(Calendar.DAY_OF_MONTH, 1);
-        final int dayOfWeek = start.get(Calendar.DAY_OF_WEEK);
-        start.add(Calendar.DATE, -dayOfWeek + start.getFirstDayOfWeek());
+
         Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
         end.add(Calendar.MONTH, 1);
 
@@ -157,10 +156,10 @@ class MonthDisplayStrategy implements DisplayStrategy {
         calendar.getConfig().setIntervalEnd(end);
 
         Calendar c = CalendarUtil.copyCalendar(start, true);
-
+        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
         for (int i = 0; i < 35; i++) {
             days[i].setDate(c.getTime());
-            days[i].setEnabled(!CalendarUtil.isSameMonth(start, c));
+            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
             c.add(Calendar.DATE, 1);
         }
 
