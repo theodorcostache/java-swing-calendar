@@ -41,7 +41,7 @@ public class EventRepository {
 	public void removeIntervalSelectionListener(final JCalendar owner,
 			final IntervalSelectionListener intervalSelectionListener) {
 		if (intervalSelectionListeners.containsKey(owner))
-			this.intervalSelectionListeners.remove(intervalSelectionListener);
+			this.intervalSelectionListeners.get(owner).remove(intervalSelectionListener);
 	}
 
 	public void triggerIntervalSelection(final JCalendar owner, final Date start, final Date end) {

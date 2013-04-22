@@ -76,7 +76,7 @@ public class CalendarUtil {
 		return c;
 	}
 
-	public static final Date createDate(final int year, final int month, final int day, final int hour,
+	public static Date createDate(final int year, final int month, final int day, final int hour,
 			final int minutes, final int seconds, final int miliseconds) {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.DATE, day);
@@ -89,7 +89,7 @@ public class CalendarUtil {
 		return calendar.getTime();
 	}
 
-	public static final Date stripTime(final Date date) {
+	public static Date stripTime(final Date date) {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -99,21 +99,21 @@ public class CalendarUtil {
 		return calendar.getTime();
 	}
 
-	public static final Date createInDays(final Date from, final int amount) {
+	public static Date createInDays(final Date from, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(from);
 		cal.add(Calendar.DATE, amount);
 		return cal.getTime();
 	}
 
-	public static final Date createInWeeks(final Date date, final int amount) {
+	public static Date createInWeeks(final Date date, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.WEEK_OF_YEAR, amount);
 		return cal.getTime();
 	}
 
-	public static final Date createInMonths(final Date date, final int amount) {
+	public static Date createInMonths(final Date date, final int amount) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.MONTH, amount);
@@ -143,8 +143,7 @@ public class CalendarUtil {
 
 	public static int secondsToPixels(final Date date, final int maxHeight) {
 		final long seconds = getTotalSeconds(date);
-		final int pixel = Math.round(seconds * maxHeight / 86400.0f);
-		return pixel;
+		return Math.round(seconds * maxHeight / 86400.0f);
 	}
 
 	public static Date pixelToDate(final Date day, final int posY, final int maxHeight) {
