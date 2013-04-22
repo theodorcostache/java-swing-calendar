@@ -161,7 +161,7 @@ public class DayContentPanel extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					final Date startDate = CalendarUtil.pixelToDate(
-							owner.getDate(), (int) e.getY(), getHeight());
+							owner.getDate(), e.getY(), getHeight());
 
 					EventRepository.get().triggerIntervalSelection(calendar,
 							startDate, startDate);

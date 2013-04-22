@@ -64,13 +64,9 @@ public class JCalendarFrameDemo extends JFrame {
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy HH:mm:ss:SSS");
 	private final Random r = new Random();
 
-	private JMenuBar menuBar;
-	private JMenu fileMenu;
-	private JMenuItem exitMenuItem;
+    private JMenuItem exitMenuItem;
 	private JCalendar jCalendar;
-	private JSplitPane content;
-	private JToolBar toolBar;
-	private JTextArea description;
+    private JTextArea description;
 	private JPopupMenu popup;
 	private JMenuItem removeMenuItem;
 
@@ -91,16 +87,16 @@ public class JCalendarFrameDemo extends JFrame {
 
 	private void initGui() {
 
-		menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
 
-		fileMenu = new JMenu("File");
+        JMenu fileMenu = new JMenu("File");
 		exitMenuItem = new JMenuItem("Exit");
 
 		fileMenu.add(exitMenuItem);
 		menuBar.add(fileMenu);
 		setJMenuBar(menuBar);
 
-		toolBar = new JToolBar("Controls");
+        JToolBar toolBar = new JToolBar("Controls");
 		addButton = new JButton("Add");
 		removeButton = new JButton("Remove");
 
@@ -112,7 +108,7 @@ public class JCalendarFrameDemo extends JFrame {
 			addButton.setIcon(new ImageIcon(addImg));
 			removeButton.setIcon(new ImageIcon(removeImg));
 		} catch (final Exception e) {
-
+              System.err.println(e.toString());
 		}
 		toolBar.add(addButton);
 		toolBar.add(removeButton);
@@ -133,7 +129,7 @@ public class JCalendarFrameDemo extends JFrame {
 		jCalendar.getConfig().setAllDayPanelVisible(false);
 		jCalendar.getConfig().setHolidays(Arrays.asList(new Date()));
 
-		content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        JSplitPane content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		content.add(jCalendar);
 		content.add(new JScrollPane(description));
 
