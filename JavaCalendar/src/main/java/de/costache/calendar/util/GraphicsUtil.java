@@ -87,6 +87,10 @@ public class GraphicsUtil {
 	public static void drawTrimmedString(Graphics g, String s, int x, int y, int width) {
 		// FontMetrics gives us information about the width,
 		// height, etc. of the current Graphics object's Font.
+
+        if(s == null)
+            s = "" + s;
+
 		FontMetrics fm = g.getFontMetrics();
 
 		int wordWidth = fm.stringWidth(s + " ");
