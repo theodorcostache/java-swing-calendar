@@ -61,6 +61,10 @@ public class DayContentPanel extends JPanel {
 	private void addListeners() {
 
 		this.addMouseListener(new MouseAdapter() {
+
+            final JCalendar calendar = DayContentPanel.this.owner
+                    .getOwner();
+
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 				for (final MouseListener ml : DayContentPanel.this.owner
@@ -72,6 +76,10 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mouseReleased(final MouseEvent e) {
 
+                if (e.isPopupTrigger() && calendar.getPopupMenu() != null) {
+                    calendar.getPopupMenu().show(DayContentPanel.this,
+                            e.getX(), e.getY());
+                }
 				for (final MouseListener ml : DayContentPanel.this.owner
 						.getOwner().getMouseListeners()) {
 					ml.mouseReleased(e);
@@ -80,9 +88,6 @@ public class DayContentPanel extends JPanel {
 
 			@Override
 			public void mousePressed(final MouseEvent e) {
-
-				final JCalendar calendar = DayContentPanel.this.owner
-						.getOwner();
 
 				final boolean isSelectedStrategyMonth = calendar
 						.getDisplayStrategy() == Type.MONTH;
@@ -125,6 +130,9 @@ public class DayContentPanel extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 
+            final JCalendar calendar = DayContentPanel.this.owner
+                    .getOwner();
+
 			@Override
 			public void mousePressed(final MouseEvent e) {
 				startSelection = e.getPoint();
@@ -133,8 +141,7 @@ public class DayContentPanel extends JPanel {
 
 			@Override
 			public void mouseReleased(final MouseEvent e) {
-				final JCalendar calendar = DayContentPanel.this.owner
-						.getOwner();
+
 				final Date startDate = CalendarUtil.pixelToDate(
 						owner.getDate(), (int) startSelection.getY(),
 						getHeight());
@@ -153,8 +160,6 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					final JCalendar calendar = DayContentPanel.this.owner
-							.getOwner();
 					final Date startDate = CalendarUtil.pixelToDate(
 							owner.getDate(), (int) e.getY(), getHeight());
 
@@ -171,11 +176,13 @@ public class DayContentPanel extends JPanel {
 
 		addMouseMotionListener(new MouseAdapter() {
 
+            final JCalendar calendar = DayContentPanel.this.owner
+                    .getOwner();
+
 			@Override
 			public void mouseDragged(final MouseEvent e) {
 				endSelection = e.getPoint();
-				final JCalendar calendar = DayContentPanel.this.owner
-						.getOwner();
+
 				calendar.validate();
 				calendar.repaint();
 			}
@@ -183,12 +190,12 @@ public class DayContentPanel extends JPanel {
 
 		addMouseMotionListener(new MouseAdapter() {
 
+            final JCalendar calendar = DayContentPanel.this.owner
+                    .getOwner();
 			@Override
 			public void mouseMoved(final MouseEvent e) {
 				super.mouseMoved(e);
 
-				final JCalendar calendar = DayContentPanel.this.owner
-						.getOwner();
 				final boolean isSelectedStrategyMonth = calendar
 						.getDisplayStrategy() == Type.MONTH;
 				final CalendarEvent event = isSelectedStrategyMonth ? getEventForMonth(
