@@ -142,6 +142,8 @@ public class DayContentPanel extends JPanel {
 			@Override
 			public void mouseReleased(final MouseEvent e) {
 
+                if(startSelection == null || endSelection == null)
+                    return;
 				final Date startDate = CalendarUtil.pixelToDate(
 						owner.getDate(), (int) startSelection.getY(),
 						getHeight());
@@ -159,7 +161,7 @@ public class DayContentPanel extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
+				if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
 					final Date startDate = CalendarUtil.pixelToDate(
 							owner.getDate(), e.getY(), getHeight());
 
