@@ -34,6 +34,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import de.costache.calendar.JCalendar;
 import de.costache.calendar.ui.ContentPanel;
 import de.costache.calendar.ui.DayPanel;
 import de.costache.calendar.ui.HoursPanel;
@@ -46,8 +47,8 @@ import de.costache.calendar.util.CalendarUtil;
  */
 class WeekDisplayStrategy implements DisplayStrategy {
 
-	private Calendar start;
 	private final ContentPanel parent;
+    private final JCalendar calendar;
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 	private final DayPanel[] days = new DayPanel[7];
 
@@ -55,6 +56,7 @@ class WeekDisplayStrategy implements DisplayStrategy {
 
 	public WeekDisplayStrategy(final ContentPanel parent) {
 		this.parent = parent;
+        this.calendar = parent.getOwner();
 		init();
 	}
 
@@ -64,9 +66,14 @@ class WeekDisplayStrategy implements DisplayStrategy {
 		UIDefaults uidef = UIManager.getDefaults();
 		int swidth = Integer.parseInt(uidef.get("ScrollBar.width").toString());
 
-		if (start == null)
-			start = CalendarUtil.getCalendar(parent.getOwner().getSelectedDay(), true);
+		Calendar start = CalendarUtil.getCalendar(new Date(), true);
 		start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
+
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,7);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
 
 		JPanel headersPanel = new JPanel(true);
 		headersPanel.setLayout(new GridLayout());
@@ -151,10 +158,15 @@ class WeekDisplayStrategy implements DisplayStrategy {
 
 	@Override
 	public void moveIntervalLeft() {
-		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, -7));
-		start.setTime(CalendarUtil.createInDays(currentDay, -7));
-		start.set(Calendar.DAY_OF_WEEK, 1);
+		Calendar start = calendar.getConfig().getIntervalStart();
+        start.setTime(CalendarUtil.createInDays(start.getTime(), -7));
+		start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,7);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		for (int i = 0; i < 7; i++) {
 			days[i].setDate(c.getTime());
@@ -167,10 +179,14 @@ class WeekDisplayStrategy implements DisplayStrategy {
 
 	@Override
 	public void moveIntervalRight() {
-		Date currentDay = parent.getOwner().getSelectedDay();
-		parent.getOwner().setSelectedDay(CalendarUtil.createInDays(currentDay, 7));
-		start.setTime(CalendarUtil.createInDays(currentDay, 7));
-		start.set(Calendar.DAY_OF_WEEK, 1);
+        Calendar start = calendar.getConfig().getIntervalStart();
+        start.setTime(CalendarUtil.createInDays(start.getTime(), 7));
+        start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,7);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		for (int i = 0; i < 7; i++) {
 			days[i].setDate(c.getTime());
@@ -183,16 +199,19 @@ class WeekDisplayStrategy implements DisplayStrategy {
 
 	@Override
 	public String getDisplayInterval() {
-		final Calendar end = Calendar.getInstance();
-		end.setTime(start.getTime());
-		end.add(Calendar.DATE, 7);
-		return sdf.format(start.getTime()) + " - " + sdf.format(end.getTime());
+		return sdf.format(calendar.getConfig().getIntervalStart().getTime()) + " - " + sdf.format(calendar.getConfig().getIntervalEnd().getTime());
 	}
 
 	@Override
 	public void setIntervalStart(Date date) {
-		start = CalendarUtil.getCalendar(date, true);
+	    Calendar start = CalendarUtil.getCalendar(date, true);
 		start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,7);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
 		final Calendar c = CalendarUtil.copyCalendar(start, true);
 		for (int i = 0; i < 7; i++) {
 			days[i].setDate(c.getTime());
@@ -211,28 +230,5 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	@Override
 	public Type getType() {
 		return Type.WEEK;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.mediamarkt.calendar.strategy.DisplayStrategy#getIntervalStart()
-	 */
-	@Override
-	public Date getIntervalStart() {
-		return start.getTime();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.mediamarkt.calendar.strategy.DisplayStrategy#getIntervalEnd()
-	 */
-	@Override
-	public Date getIntervalEnd() {
-		final Calendar c = CalendarUtil.copyCalendar(start, true);
-		c.add(Calendar.DATE, 7);
-		c.add(Calendar.SECOND, -1);
-		return c.getTime();
 	}
 }
