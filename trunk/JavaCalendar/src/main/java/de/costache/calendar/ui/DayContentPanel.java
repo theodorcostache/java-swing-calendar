@@ -15,7 +15,7 @@
  */
 package de.costache.calendar.ui;
 
-import de.costache.calendar.Config;
+import de.costache.calendar.ui.strategy.Config;
 import de.costache.calendar.JCalendar;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;

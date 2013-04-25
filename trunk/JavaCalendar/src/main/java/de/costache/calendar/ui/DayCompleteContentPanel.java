@@ -30,7 +30,7 @@ import java.util.Collection;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import de.costache.calendar.Config;
+import de.costache.calendar.ui.strategy.Config;
 import de.costache.calendar.JCalendar;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.util.EventCollection;

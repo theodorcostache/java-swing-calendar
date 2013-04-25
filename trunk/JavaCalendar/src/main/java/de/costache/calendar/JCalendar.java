@@ -121,6 +121,12 @@ public class JCalendar extends JPanel {
 				final DisplayStrategy strategy = contentPane.getStrategy();
 				strategy.moveIntervalLeft();
 				headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
+                final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
+                        config.getIntervalStart().getTime(), config.getIntervalEnd().getTime());
+
+                for (final IntervalChangedListener listener : intervalChangedListener) {
+                    listener.intervalChanged(event);
+                }
 
 			}
 		});
@@ -131,6 +137,12 @@ public class JCalendar extends JPanel {
 				final DisplayStrategy strategy = contentPane.getStrategy();
 				strategy.moveIntervalRight();
 				headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
+                final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
+                        config.getIntervalStart().getTime(), config.getIntervalEnd().getTime());
+
+                for (final IntervalChangedListener listener : intervalChangedListener) {
+                    listener.intervalChanged(event);
+                }
 			}
 		});
 	}
