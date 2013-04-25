@@ -17,6 +17,7 @@ package de.costache.calendar.util;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import de.costache.calendar.events.ModelChangedListener;
 import de.costache.calendar.events.SelectionChangedListener;
@@ -33,15 +34,21 @@ public interface EventCollection {
 
 	void remove(CalendarEvent event);
 
+    void removeAll(List<CalendarEvent> calendarEventList);
+
 	void addSelected(CalendarEvent event);
 
 	void removeSelected(CalendarEvent event);
 
 	void clearSelected(CalendarEvent event, boolean b);
 
+    List<CalendarEvent> getHolidayEvents(Date date);
+
 	Collection<CalendarEvent> getSelectedEvents();
 
 	Collection<CalendarEvent> getEvents(Date date);
+
+    Collection<CalendarEvent> getAllEvents();
 
 	void addCollectionChangedListener(ModelChangedListener listener);
 

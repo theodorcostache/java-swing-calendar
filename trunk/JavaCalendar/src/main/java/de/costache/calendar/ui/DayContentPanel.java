@@ -70,6 +70,8 @@ public class DayContentPanel extends JPanel {
                     ml.mouseClicked(e);
                 }
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    if(startSelection == null || endSelection == null)
+                        return;
                     Date startDate = CalendarUtil.pixelToDate(owner.getDate(), (int) startSelection.getY(), getHeight());
                     Date endDate = CalendarUtil.pixelToDate(owner.getDate(), (int) endSelection.getY(), getHeight());
                     EventRepository.get().triggerIntervalSelection(calendar,
@@ -206,15 +208,19 @@ public class DayContentPanel extends JPanel {
                         e.getX(), e.getY()) : getNotMonthEvent(e.getX(),
                         e.getY());
 
+
+
                 if (event != null) {
                     setToolTipText(calendar.getTooltipFormater().format(event));
                 } else {
-                    setToolTipText(null);
+
+                    setToolTipText(calendar.getTooltipFormater().format(EventCollectionRepository.get(calendar).getHolidayEvents(owner.getDate())));
                 }
 
             }
         });
     }
+
 
     /**
      * returns the owner
@@ -261,10 +267,11 @@ public class DayContentPanel extends JPanel {
         final int workingHoursEndHeight = height - config.getWorkingHoursEnd()
                 * 60;
         final boolean isSelectedStrategyMonth = calendar.getDisplayStrategy() == Type.MONTH;
+        final List<CalendarEvent> holidays = EventCollectionRepository.get(calendar).getHolidayEvents(owner.getDate());
 
         if (isEnabled()) {
             if (!isSelectedStrategyMonth) {
-                if (!calendar.getConfig().isHoliday(owner.getDate())) {
+                if (holidays.size() == 0) {
                     graphics2d.setColor(outsideWorkingHoursColor);
                     graphics2d.fillRect(0, 0, width, workingHoursRectHeight);
                     graphics2d.fillRect(0, workingHoursEndRectYStart, width,
@@ -272,7 +279,7 @@ public class DayContentPanel extends JPanel {
                 }
             }
 
-            if (calendar.getConfig().isHoliday(owner.getDate())) {
+            if (holidays.size() > 0) {
                 graphics2d.setColor(calendar.getConfig().getHolidayBgColor());
                 graphics2d.fillRect(0, 0, width, height);
 
@@ -314,7 +321,7 @@ public class DayContentPanel extends JPanel {
         final Config config = owner.getOwner().getConfig();
         if (events.size() > 0) {
             for (final CalendarEvent event : events) {
-                if (event.isAllDay())
+                if (event.isAllDay() || event.isHoliday())
                     continue;
                 Color bgColor = event.getType().getBackgroundColor();
                 bgColor = bgColor == null ? config
@@ -378,7 +385,7 @@ public class DayContentPanel extends JPanel {
 
         if (events.size() > 0) {
             for (final CalendarEvent event : events) {
-                if (event.isAllDay())
+                if (event.isAllDay() || event.isHoliday())
                     continue;
 
                 int eventYStart = 0;
@@ -429,7 +436,8 @@ public class DayContentPanel extends JPanel {
         if (events.size() > 0) {
             final Config config = owner.getOwner().getConfig();
             for (final CalendarEvent event : events) {
-
+                if (event.isHoliday())
+                    continue;
                 Color bgColor = event.getType().getBackgroundColor();
                 bgColor = bgColor == null ? config
                         .getEventDefaultBackgroundColor() : bgColor;
@@ -469,6 +477,9 @@ public class DayContentPanel extends JPanel {
         int pos = 2;
         if (events.size() > 0) {
             for (final CalendarEvent event : events) {
+
+                if(event.isHoliday())
+                    continue;
 
                 final int rectXStart = 2;
                 final int rectYStart = pos;

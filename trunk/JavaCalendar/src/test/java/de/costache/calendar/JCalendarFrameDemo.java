@@ -127,8 +127,7 @@ public class JCalendarFrameDemo extends JFrame {
 		jCalendar.setPreferredSize(new Dimension(1024, 768));
 		jCalendar.setJPopupMenu(popup);
 		jCalendar.getConfig().setAllDayPanelVisible(false);
-		jCalendar.getConfig().setHolidays(Arrays.asList(new Date()));
-        JSplitPane content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		JSplitPane content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		content.add(jCalendar);
 		content.add(new JScrollPane(description));
 
@@ -177,12 +176,13 @@ public class JCalendarFrameDemo extends JFrame {
 		calendarEvent = new CalendarEvent("Overlapping", start, end);
 		jCalendar.addCalendarEvent(calendarEvent);
 
-		start = CalendarUtil.createDate(2013, 1, 31, 8, 45, 0, 0);
-		end = CalendarUtil.createDate(2013, 1, 31, 15, 35, 0, 0);
+		start = CalendarUtil.createDate(2013, 4, 25, 8, 45, 0, 0);
+		end = CalendarUtil.createDate(2013, 4, 25, 15, 35, 0, 0);
 		calendarEvent = new CalendarEvent("Overlapping 2", start, end);
+        calendarEvent.setHoliday(true);
 		jCalendar.addCalendarEvent(calendarEvent);
 
-        jCalendar.setDisplayStrategy(DisplayStrategy.Type.MONTH,CalendarUtil.createDate(2011,04,01,0,0,0,0));
+        //jCalendar.setDisplayStrategy(DisplayStrategy.Type.MONTH,CalendarUtil.createDate(2011,04,01,0,0,0,0));
 	}
 
 	private void bindListeners() {

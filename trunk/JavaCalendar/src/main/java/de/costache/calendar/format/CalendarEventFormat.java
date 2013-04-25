@@ -17,7 +17,11 @@ package de.costache.calendar.format;
 
 import de.costache.calendar.model.CalendarEvent;
 
+import java.util.Collection;
+
 public interface CalendarEventFormat {
 
 	public String format(CalendarEvent calendarEvent);
+
+    public String format(Collection<CalendarEvent> holidays);
 }
