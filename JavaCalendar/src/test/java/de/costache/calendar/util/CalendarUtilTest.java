@@ -83,4 +83,22 @@ public class CalendarUtilTest {
 		Assert.assertEquals(expected, actual);
 	}
 
+    @Test
+    public void testRoundToHalfAnHour(){
+        Date dateActual = CalendarUtil.roundDateToHalfAnHour(CalendarUtil.createDate(2013, 10, 10, 20, 45, 50, 0),true);
+        Date dateExpected = CalendarUtil.createDate(2013, 10, 10, 21, 0, 0, 0);
+
+        Assert.assertEquals(dateActual,dateExpected);
+
+        dateActual = CalendarUtil.roundDateToHalfAnHour(CalendarUtil.createDate(2013, 10, 10, 20, 15, 0, 0),false);
+        dateExpected = CalendarUtil.createDate(2013, 10, 10, 20, 0, 0, 0);
+
+        Assert.assertEquals(dateActual,dateExpected);
+
+        dateActual = CalendarUtil.roundDateToHalfAnHour(CalendarUtil.createDate(2013, 10, 10, 20, 25, 0, 0),true);
+        dateExpected = CalendarUtil.createDate(2013, 10, 10, 20, 30, 0, 0);
+
+        Assert.assertEquals(dateActual,dateExpected);
+    }
+
 }
