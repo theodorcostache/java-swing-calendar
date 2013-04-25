@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License. 
  */
-package de.costache.calendar;
+package de.costache.calendar.ui.strategy;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -221,7 +221,7 @@ public class Config {
         return intervalStart;
     }
 
-    public void setIntervalStart(Calendar intervalStart) {
+    void setIntervalStart(Calendar intervalStart) {
         this.intervalStart = intervalStart;
     }
 
@@ -229,7 +229,7 @@ public class Config {
         return intervalEnd;
     }
 
-    public void setIntervalEnd(Calendar intervalEnd) {
+    void setIntervalEnd(Calendar intervalEnd) {
         this.intervalEnd = intervalEnd;
     }
 }
