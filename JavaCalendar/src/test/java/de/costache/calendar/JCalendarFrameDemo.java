@@ -6,10 +6,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
@@ -35,7 +32,6 @@ import javax.swing.JToolBar;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-import de.costache.calendar.JCalendar;
 import de.costache.calendar.events.IntervalChangedEvent;
 import de.costache.calendar.events.IntervalChangedListener;
 import de.costache.calendar.events.IntervalSelectionEvent;
@@ -47,7 +43,6 @@ import de.costache.calendar.events.SelectionChangedListener;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.model.EventType;
 import de.costache.calendar.ui.strategy.DisplayStrategy;
-import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
 import de.costache.calendar.util.CalendarUtil;
 
 /**
@@ -217,7 +212,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void actionPerformed(final ActionEvent arg0) {
-				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+				final Collection<CalendarEvent> selected = jCalendar.getSelectedCalendarEvents();
 				for (final CalendarEvent event : selected) {
 					jCalendar.removeCalendarEvent(event);
 				}
@@ -228,7 +223,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+				final Collection<CalendarEvent> selected = jCalendar.getSelectedCalendarEvents();
 				for (final CalendarEvent event : selected) {
 					jCalendar.removeCalendarEvent(event);
 				}
@@ -292,7 +287,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				removeMenuItem.setEnabled(jCalendar.getSelectedEvents().size() > 0);
+				removeMenuItem.setEnabled(jCalendar.getSelectedCalendarEvents().size() > 0);
 			}
 
 			@Override

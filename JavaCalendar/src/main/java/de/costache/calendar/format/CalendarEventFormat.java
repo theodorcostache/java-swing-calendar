@@ -19,6 +19,10 @@ import de.costache.calendar.model.CalendarEvent;
 
 import java.util.Collection;
 
+/**
+ * To provide a custom tooltip formatter implement this interfaces and use
+ * the method setTooltipFormater(...) from the {@link de.costache.calendar.JCalendar} class
+ */
 public interface CalendarEventFormat {
 
 	public String format(CalendarEvent calendarEvent);

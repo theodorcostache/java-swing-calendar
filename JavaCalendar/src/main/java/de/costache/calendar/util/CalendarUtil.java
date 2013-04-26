@@ -160,10 +160,10 @@ public class CalendarUtil {
 
         for (int i = 0; i < clonedCollection.size(); i++) {
             final CalendarEvent event1 = clonedCollection.get(i);
-            conflictingEvents.put(event1, new ArrayList<CalendarEvent>());
+             conflictingEvents.put(event1, new ArrayList<CalendarEvent>());
             for (int j = 0; j < clonedCollection.size(); j++) {
                 final CalendarEvent event2 = clonedCollection.get(j);
-                if (event2.isAllDay())
+                if (event2.isAllDay() || event2.isHoliday())
                     continue;
                 final Date startA = event1.getStart();
                 final Date endA = event1.getEnd();

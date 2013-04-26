@@ -20,13 +20,12 @@ import de.costache.calendar.model.CalendarEvent;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 
+/**
+ * The default formatter for the the tooltip text
+ */
 public class DefaultCalendarEventFormat implements CalendarEventFormat {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-    public DefaultCalendarEventFormat() {
-
-    }
 
     @Override
     public String format(CalendarEvent calendarEvent) {
