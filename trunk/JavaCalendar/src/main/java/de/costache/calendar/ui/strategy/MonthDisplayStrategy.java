@@ -91,7 +91,7 @@ class MonthDisplayStrategy implements DisplayStrategy {
         start.set(Calendar.DAY_OF_MONTH, 1);
 
         Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.MONTH, -1);
+        end.add(Calendar.MONTH, 1);
 
         calendar.getConfig().setIntervalStart(start);
         calendar.getConfig().setIntervalEnd(end);
