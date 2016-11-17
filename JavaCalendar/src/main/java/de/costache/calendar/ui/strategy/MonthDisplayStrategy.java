@@ -85,52 +85,12 @@ class MonthDisplayStrategy implements DisplayStrategy {
 
     @Override
     public void moveIntervalLeft() {
-        Calendar start = CalendarUtil.copyCalendar(calendar.getConfig().getIntervalStart(), true);
-
-        start.add(Calendar.MONTH, -1);
-        start.set(Calendar.DAY_OF_MONTH, 1);
-
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.MONTH, 1);
-
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-        Calendar c = CalendarUtil.copyCalendar(start, true);
-        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
-        for (int i = 0; i < 35; i++) {
-            days[i].setDate(c.getTime());
-            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
-            c.add(Calendar.DATE, 1);
-        }
-
-        parent.validate();
-        parent.repaint();
+        moveInterval(-1);
     }
 
     @Override
     public void moveIntervalRight() {
-        Calendar start = CalendarUtil.copyCalendar(calendar.getConfig().getIntervalStart(), true);
-
-        start.add(Calendar.MONTH, 1);
-        start.set(Calendar.DAY_OF_MONTH, 1);
-
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.MONTH, 1);
-
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-        Calendar c = CalendarUtil.copyCalendar(start, true);
-        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
-        for (int i = 0; i < 35; i++) {
-            days[i].setDate(c.getTime());
-            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
-            c.add(Calendar.DATE, 1);
-        }
-
-        parent.validate();
-        parent.repaint();
+        moveInterval(1);
     }
 
     /*
@@ -177,4 +137,27 @@ class MonthDisplayStrategy implements DisplayStrategy {
         return Type.MONTH;
     }
 
+    private void moveInterval(int months) {
+        Calendar start = CalendarUtil.copyCalendar(calendar.getConfig().getIntervalStart(), true);
+
+        start.add(Calendar.MONTH, months);
+        start.set(Calendar.DAY_OF_MONTH, 1);
+
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.MONTH, 1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
+        Calendar c = CalendarUtil.copyCalendar(start, true);
+        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
+        for (int i = 0; i < 35; i++) {
+            days[i].setDate(c.getTime());
+            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
+            c.add(Calendar.DATE, 1);
+        }
+
+        parent.validate();
+        parent.repaint();
+    }
 }
