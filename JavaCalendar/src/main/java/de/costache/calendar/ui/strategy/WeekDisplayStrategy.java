@@ -157,6 +157,11 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	}
 
 	@Override
+	public void moveIntervalFarLeft() {
+		moveInterval(-4);
+	}
+
+	@Override
 	public void moveIntervalLeft() {
 		moveInterval(-1);
 	}
@@ -164,6 +169,11 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	@Override
 	public void moveIntervalRight() {
         moveInterval(1);
+	}
+
+	@Override
+	public void moveIntervalFarRight() {
+		moveInterval(4);
 	}
 
 	@Override

@@ -113,6 +113,22 @@ public class JCalendar extends JPanel {
         headerPane.getWeekButton().addActionListener(strategyActionListener);
         headerPane.getMonthButton().addActionListener(strategyActionListener);
 
+        headerPane.getScrollFarLeft().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final DisplayStrategy strategy = contentPane.getStrategy();
+                strategy.moveIntervalFarLeft();
+                headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
+                final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
+                        config.getIntervalStart().getTime(), config.getIntervalEnd().getTime());
+
+                for (final IntervalChangedListener listener : intervalChangedListener) {
+                    listener.intervalChanged(event);
+                }
+
+            }
+        });
+
         headerPane.getScrollLeft().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -134,6 +150,21 @@ public class JCalendar extends JPanel {
             public void actionPerformed(final ActionEvent e) {
                 final DisplayStrategy strategy = contentPane.getStrategy();
                 strategy.moveIntervalRight();
+                headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
+                final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
+                        config.getIntervalStart().getTime(), config.getIntervalEnd().getTime());
+
+                for (final IntervalChangedListener listener : intervalChangedListener) {
+                    listener.intervalChanged(event);
+                }
+            }
+        });
+
+        headerPane.getScrollFarRight().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final DisplayStrategy strategy = contentPane.getStrategy();
+                strategy.moveIntervalFarRight();
                 headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());
                 final IntervalChangedEvent event = new IntervalChangedEvent(JCalendar.this, strategy.getType(),
                         config.getIntervalStart().getTime(), config.getIntervalEnd().getTime());

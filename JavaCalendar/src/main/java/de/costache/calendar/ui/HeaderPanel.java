@@ -41,9 +41,13 @@ public class HeaderPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private JButton scrollFarLeftButton;
+	
 	private JButton scrollLeftButton;
 
 	private JButton scrollRightButton;
+
+	private JButton scrollFarRightButton;
 
 	private JLabel intervalLabel;
 
@@ -75,28 +79,21 @@ public class HeaderPanel extends JPanel {
 	}
 
 	private void init() {
+		scrollFarLeftButton = setupButton(new JButton());
+		scrollLeftButton = setupButton(new JButton());
+		scrollRightButton = setupButton(new JButton());
+		scrollFarRightButton = setupButton(new JButton());
 
-		scrollLeftButton = new JButton();
-		scrollRightButton = new JButton();
-
-		scrollLeftButton.setBorderPainted(false);
-		scrollLeftButton.setFocusPainted(false);
-		scrollLeftButton.setContentAreaFilled(false);
-
-		scrollRightButton.setBorderPainted(false);
-		scrollRightButton.setFocusPainted(false);
-		scrollRightButton.setContentAreaFilled(false);
-
-		Image left = null;
-		Image right = null;
 		try {
-			left = ImageIO.read(getClass().getClassLoader().getResource("de/costache/calendar/resources/left.png"));
-			right = ImageIO.read(getClass().getClassLoader().getResource("de/costache/calendar/resources/right.png"));
-			scrollLeftButton.setIcon(new ImageIcon(left));
-			scrollRightButton.setIcon(new ImageIcon(right));
+			scrollFarLeftButton.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResource("de/costache/calendar/resources/far-left.png"))));
+			scrollLeftButton.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResource("de/costache/calendar/resources/left.png"))));
+			scrollRightButton.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResource("de/costache/calendar/resources/right.png"))));
+			scrollFarRightButton.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResource("de/costache/calendar/resources/far-right.png"))));
 		} catch (final Exception e) {
+			scrollFarLeftButton.setText("<<");
 			scrollLeftButton.setText("<");
 			scrollRightButton.setText(">");
+			scrollFarRightButton.setText(">>");
 		}
 
 		intervalLabel = new JLabel();
@@ -114,37 +111,59 @@ public class HeaderPanel extends JPanel {
 
 		setLayout(new GridBagLayout());
 		final GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
+
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.NONE;
-		add(scrollLeftButton, c);
+
+		c.gridx = 0;
+		c.gridy = 0;
+		add(scrollFarLeftButton, c);
+
 		c.gridx = 1;
 		c.gridy = 0;
-		add(scrollRightButton, c);
+		add(scrollLeftButton, c);
+
 		c.gridx = 2;
+		c.gridy = 0;
+		add(scrollRightButton, c);
+
+		c.gridx = 3;
+		c.gridy = 0;
+		add(scrollFarRightButton, c);
+
+		c.gridx = 4;
 		c.gridy = 0;
 		c.weightx = 1.0;
 		c.insets = new Insets(10, 10, 10, 10);
 		add(intervalLabel, c);
-		c.gridx = 3;
+
+		c.gridx = 5;
 		c.gridy = 0;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 0);
 		add(dayButton, c);
-		c.gridx = 4;
+
+		c.gridx = 6;
 		c.gridy = 0;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 0, 10, 0);
 		add(weekButton, c);
-		c.gridx = 5;
+
+		c.gridx = 7;
 		c.gridy = 0;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 0, 10, 10);
 		add(monthButton, c);
+	}
+
+	/**
+	 * @return the scrollFarLeft
+	 */
+	public JButton getScrollFarLeft() {
+		return scrollFarLeftButton;
 	}
 
 	/**
@@ -159,6 +178,13 @@ public class HeaderPanel extends JPanel {
 	 */
 	public JButton getScrollRight() {
 		return scrollRightButton;
+	}
+
+	/**
+	 * @return the scrollFarRight
+	 */
+	public JButton getScrollFarRight() {
+		return scrollFarRightButton;
 	}
 
 	/**
@@ -189,4 +215,11 @@ public class HeaderPanel extends JPanel {
 		return intervalLabel;
 	}
 
+	private JButton setupButton(JButton button) {
+		button.setBorderPainted(false);
+		button.setFocusPainted(false);
+		button.setContentAreaFilled(false);
+
+		return button;
+	}
 }

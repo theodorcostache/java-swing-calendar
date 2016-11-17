@@ -83,15 +83,25 @@ class MonthDisplayStrategy implements DisplayStrategy {
         parent.repaint();
     }
 
-    @Override
-    public void moveIntervalLeft() {
-        moveInterval(-1);
-    }
+	@Override
+	public void moveIntervalFarLeft() {
+		moveInterval(-12);
+	}
 
-    @Override
-    public void moveIntervalRight() {
+	@Override
+	public void moveIntervalLeft() {
+		moveInterval(-1);
+	}
+
+	@Override
+	public void moveIntervalRight() {
         moveInterval(1);
-    }
+	}
+
+	@Override
+	public void moveIntervalFarRight() {
+		moveInterval(12);
+	}
 
     /*
      * (non-Javadoc)

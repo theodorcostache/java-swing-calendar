@@ -136,6 +136,11 @@ class DayDisplayStrategy implements DisplayStrategy {
 	}
 
 	@Override
+	public void moveIntervalFarLeft() {
+		moveInterval(-7);
+	}
+
+	@Override
 	public void moveIntervalLeft() {
 		moveInterval(-1);
 	}
@@ -143,6 +148,11 @@ class DayDisplayStrategy implements DisplayStrategy {
 	@Override
 	public void moveIntervalRight() {
         moveInterval(1);
+	}
+
+	@Override
+	public void moveIntervalFarRight() {
+		moveInterval(7);
 	}
 
 	@Override
