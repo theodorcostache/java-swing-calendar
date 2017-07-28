@@ -34,9 +34,13 @@ public interface DisplayStrategy {
 
 	public void init();
 
+	public void moveIntervalFarLeft();
+
 	public void moveIntervalLeft();
 
 	public void moveIntervalRight();
+
+	public void moveIntervalFarRight();
 
 	public String getDisplayInterval();
 

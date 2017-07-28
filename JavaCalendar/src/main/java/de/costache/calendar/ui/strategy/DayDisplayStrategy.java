@@ -136,33 +136,23 @@ class DayDisplayStrategy implements DisplayStrategy {
 	}
 
 	@Override
+	public void moveIntervalFarLeft() {
+		moveInterval(-7);
+	}
+
+	@Override
 	public void moveIntervalLeft() {
-        Calendar start = calendar.getConfig().getIntervalStart();
-        start.add(Calendar.DATE,-1);
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.DATE,1);
-
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-		day.setDate(start.getTime());
-		parent.validate();
-		parent.repaint();
+		moveInterval(-1);
 	}
 
 	@Override
 	public void moveIntervalRight() {
-        Calendar start = calendar.getConfig().getIntervalStart();
-        start.add(Calendar.DATE,1);
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.DATE,1);
+        moveInterval(1);
+	}
 
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-        day.setDate(start.getTime());
-        parent.validate();
-        parent.repaint();
+	@Override
+	public void moveIntervalFarRight() {
+		moveInterval(7);
 	}
 
 	@Override
@@ -194,4 +184,17 @@ class DayDisplayStrategy implements DisplayStrategy {
 		return Type.DAY;
 	}
 
+	private void moveInterval(int days) {
+        Calendar start = calendar.getConfig().getIntervalStart();
+        start.add(Calendar.DATE,days);
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
+		day.setDate(start.getTime());
+		parent.validate();
+		parent.repaint();
+	}
 }

@@ -157,44 +157,23 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	}
 
 	@Override
+	public void moveIntervalFarLeft() {
+		moveInterval(-4);
+	}
+
+	@Override
 	public void moveIntervalLeft() {
-		Calendar start = calendar.getConfig().getIntervalStart();
-        start.setTime(CalendarUtil.createInDays(start.getTime(), -7));
-		start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.DATE,7);
-
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-		final Calendar c = CalendarUtil.copyCalendar(start, true);
-		for (int i = 0; i < 7; i++) {
-			days[i].setDate(c.getTime());
-			c.add(Calendar.DATE, 1);
-		}
-
-		parent.validate();
-		parent.repaint();
+		moveInterval(-1);
 	}
 
 	@Override
 	public void moveIntervalRight() {
-        Calendar start = calendar.getConfig().getIntervalStart();
-        start.setTime(CalendarUtil.createInDays(start.getTime(), 7));
-        start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.DATE,7);
+        moveInterval(1);
+	}
 
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-		final Calendar c = CalendarUtil.copyCalendar(start, true);
-		for (int i = 0; i < 7; i++) {
-			days[i].setDate(c.getTime());
-			c.add(Calendar.DATE, 1);
-		}
-
-		parent.validate();
-		parent.repaint();
+	@Override
+	public void moveIntervalFarRight() {
+		moveInterval(4);
 	}
 
 	@Override
@@ -230,5 +209,25 @@ class WeekDisplayStrategy implements DisplayStrategy {
 	@Override
 	public Type getType() {
 		return Type.WEEK;
+	}
+	
+	public void moveInterval(int weeks) {
+		Calendar start = calendar.getConfig().getIntervalStart();
+        start.setTime(CalendarUtil.createInDays(start.getTime(), weeks * 7));
+		start.set(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek());
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.DATE,7);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
+		final Calendar c = CalendarUtil.copyCalendar(start, true);
+		for (int i = 0; i < 7; i++) {
+			days[i].setDate(c.getTime());
+			c.add(Calendar.DATE, 1);
+		}
+
+		parent.validate();
+		parent.repaint();
 	}
 }

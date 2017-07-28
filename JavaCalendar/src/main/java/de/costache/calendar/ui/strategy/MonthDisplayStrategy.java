@@ -83,55 +83,25 @@ class MonthDisplayStrategy implements DisplayStrategy {
         parent.repaint();
     }
 
-    @Override
-    public void moveIntervalLeft() {
-        Calendar start = CalendarUtil.copyCalendar(calendar.getConfig().getIntervalStart(), true);
+	@Override
+	public void moveIntervalFarLeft() {
+		moveInterval(-12);
+	}
 
-        start.add(Calendar.MONTH, -1);
-        start.set(Calendar.DAY_OF_MONTH, 1);
+	@Override
+	public void moveIntervalLeft() {
+		moveInterval(-1);
+	}
 
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.MONTH, 1);
+	@Override
+	public void moveIntervalRight() {
+        moveInterval(1);
+	}
 
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-        Calendar c = CalendarUtil.copyCalendar(start, true);
-        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
-        for (int i = 0; i < 35; i++) {
-            days[i].setDate(c.getTime());
-            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
-            c.add(Calendar.DATE, 1);
-        }
-
-        parent.validate();
-        parent.repaint();
-    }
-
-    @Override
-    public void moveIntervalRight() {
-        Calendar start = CalendarUtil.copyCalendar(calendar.getConfig().getIntervalStart(), true);
-
-        start.add(Calendar.MONTH, 1);
-        start.set(Calendar.DAY_OF_MONTH, 1);
-
-        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
-        end.add(Calendar.MONTH, 1);
-
-        calendar.getConfig().setIntervalStart(start);
-        calendar.getConfig().setIntervalEnd(end);
-
-        Calendar c = CalendarUtil.copyCalendar(start, true);
-        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
-        for (int i = 0; i < 35; i++) {
-            days[i].setDate(c.getTime());
-            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
-            c.add(Calendar.DATE, 1);
-        }
-
-        parent.validate();
-        parent.repaint();
-    }
+	@Override
+	public void moveIntervalFarRight() {
+		moveInterval(12);
+	}
 
     /*
      * (non-Javadoc)
@@ -177,4 +147,27 @@ class MonthDisplayStrategy implements DisplayStrategy {
         return Type.MONTH;
     }
 
+    private void moveInterval(int months) {
+        Calendar start = CalendarUtil.copyCalendar(calendar.getConfig().getIntervalStart(), true);
+
+        start.add(Calendar.MONTH, months);
+        start.set(Calendar.DAY_OF_MONTH, 1);
+
+        Calendar end = CalendarUtil.getCalendar(start.getTime(), true);
+        end.add(Calendar.MONTH, 1);
+
+        calendar.getConfig().setIntervalStart(start);
+        calendar.getConfig().setIntervalEnd(end);
+
+        Calendar c = CalendarUtil.copyCalendar(start, true);
+        c.set(Calendar.DAY_OF_WEEK,c.getFirstDayOfWeek());
+        for (int i = 0; i < 35; i++) {
+            days[i].setDate(c.getTime());
+            days[i].setEnabled(CalendarUtil.isSameMonth(start, c));
+            c.add(Calendar.DATE, 1);
+        }
+
+        parent.validate();
+        parent.repaint();
+    }
 }
