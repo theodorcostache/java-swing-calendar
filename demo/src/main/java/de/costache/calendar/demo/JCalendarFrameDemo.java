@@ -46,6 +46,7 @@ import de.costache.calendar.events.SelectionChangedEvent;
 import de.costache.calendar.events.SelectionChangedListener;
 import de.costache.calendar.model.CalendarEvent;
 import de.costache.calendar.model.EventType;
+import de.costache.calendar.ui.strategy.DisplayStrategy;
 import de.costache.calendar.ui.strategy.DisplayStrategy.Type;
 import de.costache.calendar.util.CalendarUtil;
 
@@ -130,7 +131,7 @@ public class JCalendarFrameDemo extends JFrame {
 		jCalendar.setPreferredSize(new Dimension(1024, 768));
 		jCalendar.setJPopupMenu(popup);
 		jCalendar.getConfig().setAllDayPanelVisible(false);
-		jCalendar.getConfig().setHolidays(Arrays.asList(new Date()));
+//		jCalendar.getConfig().setHolidays(Arrays.asList(new Date()));
 
 		content = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		content.add(jCalendar);
@@ -211,7 +212,7 @@ public class JCalendarFrameDemo extends JFrame {
 				final CalendarEvent calendarEvent = new CalendarEvent("Added ", start, end);
 
 				jCalendar.addCalendarEvent(calendarEvent);
-				jCalendar.setDisplayStrategy(Type.DAY, start);
+				jCalendar.setDisplayStrategy(DisplayStrategy.Type.DAY, start);
 			}
 		});
 
@@ -219,10 +220,10 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void actionPerformed(final ActionEvent arg0) {
-				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
-				for (final CalendarEvent event : selected) {
-					jCalendar.removeCalendarEvent(event);
-				}
+//				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+//				for (final CalendarEvent event : selected) {
+//					jCalendar.removeCalendarEvent(event);
+//				}
 			}
 		});
 
@@ -230,10 +231,10 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
-				for (final CalendarEvent event : selected) {
-					jCalendar.removeCalendarEvent(event);
-				}
+//				final Collection<CalendarEvent> selected = jCalendar.getSelectedEvents();
+//				for (final CalendarEvent event : selected) {
+//					jCalendar.removeCalendarEvent(event);
+//				}
 			}
 		});
 
@@ -294,7 +295,7 @@ public class JCalendarFrameDemo extends JFrame {
 
 			@Override
 			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				removeMenuItem.setEnabled(jCalendar.getSelectedEvents().size() > 0);
+//				removeMenuItem.setEnabled(jCalendar.getSelectedEvents().size() > 0);
 			}
 
 			@Override

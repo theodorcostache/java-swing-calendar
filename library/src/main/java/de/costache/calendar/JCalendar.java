@@ -42,9 +42,6 @@ import java.util.List;
  */
 public class JCalendar extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private final List<IntervalChangedListener> intervalChangedListener;
     private HeaderPanel headerPane;
@@ -74,7 +71,7 @@ public class JCalendar extends JPanel {
      */
     private void initGui() {
         this.setBackground(Color.white);
-        headerPane = new HeaderPanel(this);
+        headerPane = new HeaderPanel();
         contentPane = new ContentPanel(this);
 
         headerPane.getIntervalLabel().setText(contentPane.getStrategy().getDisplayInterval());

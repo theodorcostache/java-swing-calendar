@@ -1,0 +1,7 @@
+apply plugin:'application'
+
+mainClassName = "de.costache.calendar.demo.JCalendarFrameDemo"
+
+dependencies {
+    compile project(':library')
+}

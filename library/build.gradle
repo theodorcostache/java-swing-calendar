@@ -1,17 +1,7 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
- 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
- 
     testCompile group: 'junit', name: 'junit', version: '4.8+'
- 
     compile 'commons-collections:commons-collections:3.1'
- }
+}
 
 //custom tasks for creating source jar 
 task sourcesJar(type: Jar, dependsOn:classes) {     

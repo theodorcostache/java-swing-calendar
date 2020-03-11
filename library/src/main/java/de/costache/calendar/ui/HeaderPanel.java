@@ -22,10 +22,7 @@ import java.awt.Insets;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import de.costache.calendar.JCalendar;
 
@@ -36,9 +33,6 @@ import de.costache.calendar.JCalendar;
  */
 public class HeaderPanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JButton scrollLeftButton;
@@ -53,31 +47,33 @@ public class HeaderPanel extends JPanel {
 
 	private JButton monthButton;
 
-	private final JCalendar owner;
-
 	/**
 	 * Creates a new instance of {@link HeaderPanel}
 	 */
-	public HeaderPanel(JCalendar owner) {
-		super(true);
-		setOpaque(false);
-		this.owner = owner;
+	public HeaderPanel() {
 		init();
-	}
-
-	/**
-	 * returns the owner
-	 * 
-	 * @return
-	 */
-	public JCalendar getOwner() {
-		return owner;
 	}
 
 	private void init() {
 
+		this.setOpaque(false);
+
+		String strDay = ResourceBundle.getBundle("calendar", this.getLocale()).getString("day");
+		String strWeek = ResourceBundle.getBundle("calendar", this.getLocale()).getString("week");
+		String strMonth = ResourceBundle.getBundle("calendar", this.getLocale()).getString("month");
+
+		dayButton = new JButton();
+		weekButton = new JButton();
+		monthButton = new JButton();
+
 		scrollLeftButton = new JButton();
 		scrollRightButton = new JButton();
+
+		intervalLabel = new JLabel();
+
+		dayButton.setText(strDay);
+		weekButton.setText(strWeek);
+		monthButton.setText(strMonth);
 
 		scrollLeftButton.setBorderPainted(false);
 		scrollLeftButton.setFocusPainted(false);
@@ -99,52 +95,43 @@ public class HeaderPanel extends JPanel {
 			scrollRightButton.setText(">");
 		}
 
-		intervalLabel = new JLabel();
-
-		String strDay = ResourceBundle.getBundle("calendar", getLocale()).getString("day");
-		String strWeek = ResourceBundle.getBundle("calendar", getLocale()).getString("week");
-		String strMonth = ResourceBundle.getBundle("calendar", getLocale()).getString("month");
-		dayButton = new JButton(strDay);
-		weekButton = new JButton(strWeek);
-		monthButton = new JButton(strMonth);
-
 		dayButton.setOpaque(false);
 		weekButton.setOpaque(false);
 		monthButton.setOpaque(false);
 
-		setLayout(new GridBagLayout());
+		this.setLayout(new GridBagLayout());
 		final GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.NONE;
-		add(scrollLeftButton, c);
+		this.add(scrollLeftButton, c);
 		c.gridx = 1;
 		c.gridy = 0;
-		add(scrollRightButton, c);
+		this.add(scrollRightButton, c);
 		c.gridx = 2;
 		c.gridy = 0;
 		c.weightx = 1.0;
 		c.insets = new Insets(10, 10, 10, 10);
-		add(intervalLabel, c);
+		this.add(intervalLabel, c);
 		c.gridx = 3;
 		c.gridy = 0;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 0);
-		add(dayButton, c);
+		this.add(dayButton, c);
 		c.gridx = 4;
 		c.gridy = 0;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 0, 10, 0);
-		add(weekButton, c);
+		this.add(weekButton, c);
 		c.gridx = 5;
 		c.gridy = 0;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 0, 10, 10);
-		add(monthButton, c);
+		this.add(monthButton, c);
 	}
 
 	/**

@@ -1,1 +1,1 @@
-![alt text](https://github.com/theodorcostache/java-swing-calendar/blob/master/JavaCalendarDemo/screenshots/screenshot1.jpg?raw=true)
+![alt text](https://github.com/theodorcostache/java-swing-calendar/blob/master/demo/screenshots/screenshot1.jpg?raw=true)

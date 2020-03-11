@@ -81,7 +81,7 @@ public class DefaultCalendarEventFormat implements CalendarEventFormat {
         formatted.append("<html>");
         for (CalendarEvent event : holidays) {
             formatted.append("<b>").append(event.getSummary()).append("</b><br/>");
-           }
+        }
 
         return formatted.toString();
     }
